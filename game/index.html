@@ -485,7 +485,7 @@
 // ══════════════════════════════════════════════
 //  VERSION & LOGGING
 // ══════════════════════════════════════════════
-const GAME_VERSION='2.6.0';
+const GAME_VERSION='2.7.0';
 const gameLog=[];
 function log(msg){
   const ts=new Date().toISOString().slice(11,19);
@@ -597,7 +597,7 @@ function sfxBossDefeat(){
   },1600);
 }
 function sfxDog(){
-  // "Woof woof!" — short sharp barks with pitch bend
+  // "Woof woof!" — loud barks with pitch bend
   if(!actx||muted)return;
   function bark(delay){
     setTimeout(()=>{
@@ -605,12 +605,12 @@ function sfxDog(){
       o.type='sawtooth';
       o.frequency.setValueAtTime(350,actx.currentTime);
       o.frequency.exponentialRampToValueAtTime(180,actx.currentTime+.12);
-      g.gain.setValueAtTime(.12,actx.currentTime);
+      g.gain.setValueAtTime(.25,actx.currentTime);
       g.gain.exponentialRampToValueAtTime(.001,actx.currentTime+.15);
       o.connect(g);g.connect(actx.destination);o.start();o.stop(actx.currentTime+.15);
     },delay);
   }
-  bark(0);bark(200);bark(600);bark(800);
+  bark(0);bark(200);bark(600);bark(900);bark(1400);bark(1600);bark(2000);bark(2300);
 }
 function sfxMarshrutka(){
   // Loud honking — BEEP BEEP!
@@ -640,12 +640,32 @@ function sfxChacha(){
       const lfo=actx.createOscillator();lfo.frequency.value=5;
       const lfoG=actx.createGain();lfoG.gain.value=3;
       lfo.connect(lfoG);lfoG.connect(o.frequency);lfo.start();
-      g.gain.setValueAtTime(.08,actx.currentTime);
+      g.gain.setValueAtTime(.2,actx.currentTime);
       g.gain.exponentialRampToValueAtTime(.001,actx.currentTime+.2);
       o.connect(g);g.connect(actx.destination);o.start();o.stop(actx.currentTime+.22);
       lfo.stop(actx.currentTime+.22);
     },i*130);
   });
+}
+function sfxBurp(){
+  // Loud comedic burp — low sine pitch drop + noise texture
+  if(!actx||muted)return;
+  const o=actx.createOscillator(),g=actx.createGain();
+  o.type='sine';
+  o.frequency.setValueAtTime(120,actx.currentTime);
+  o.frequency.exponentialRampToValueAtTime(45,actx.currentTime+.5);
+  g.gain.setValueAtTime(.3,actx.currentTime);
+  g.gain.setValueAtTime(.25,actx.currentTime+.2);
+  g.gain.exponentialRampToValueAtTime(.001,actx.currentTime+.6);
+  o.connect(g);g.connect(actx.destination);o.start();o.stop(actx.currentTime+.6);
+  // Noise texture
+  const o2=actx.createOscillator(),g2=actx.createGain();
+  o2.type='sawtooth';
+  o2.frequency.setValueAtTime(90,actx.currentTime);
+  o2.frequency.exponentialRampToValueAtTime(35,actx.currentTime+.4);
+  g2.gain.setValueAtTime(.08,actx.currentTime);
+  g2.gain.exponentialRampToValueAtTime(.001,actx.currentTime+.45);
+  o2.connect(g2);g2.connect(actx.destination);o2.start();o2.stop(actx.currentTime+.45);
 }
 function sfxKiss(){tone(520,.15,'sine',.06);setTimeout(()=>tone(660,.2,'sine',.05),100)}
 
@@ -1022,7 +1042,7 @@ const S={
   monitorFetch:false,monitorFetchPhase:0,monitorFetchTimer:0,monitorFetchX:0,
 };
 
-const ents={bugs:[],teas:[],particles:[],wife:null,dogs:[],marshrutka:null};
+const ents={bugs:[],teas:[],particles:[],wife:null,dogs:[],marshrutka:null,neighbor:null};
 
 // ══════════════════════════════════════════════
 //  FLAVORS
@@ -1476,8 +1496,44 @@ function renderNormalPhase(){
   // Dogs
   ents.dogs=ents.dogs.filter(d=>{
     d.x+=d.vx;
-    drawDog(ctx,Math.floor(d.x/ps),Math.floor(d.y/ps),ps,S.frame>>3);
-    return d.x>-50&&d.x<cW+50;
+    // Big dog (van-sized ~110x55px)
+    const dx=d.x,dy=d.y,fr=S.frame>>3;
+    const flip=d.vx<0;
+    // Body
+    ctx.fillStyle='#c4a265';
+    ctx.fillRect(dx+(flip?25:0),dy+10,80,30);
+    // Head
+    ctx.fillRect(flip?dx+95:dx-15,dy+2,25,28);
+    // Ear (triangle)
+    ctx.fillStyle='#8b7240';
+    const ex=flip?dx+108:dx-8;
+    ctx.beginPath();ctx.moveTo(ex,dy+2);ctx.lineTo(ex+8,dy-10);ctx.lineTo(ex+14,dy+5);ctx.fill();
+    // Eye
+    ctx.fillStyle='#222';
+    ctx.fillRect(flip?dx+107:dx-5,dy+10,5,5);
+    // Nose
+    ctx.fillStyle='#333';
+    ctx.fillRect(flip?dx+116:dx-16,dy+18,6,4);
+    // Mouth line
+    ctx.fillStyle='#8b7240';
+    ctx.fillRect(flip?dx+110:dx-10,dy+24,12,2);
+    // Collar
+    ctx.fillStyle='#ff4757';
+    ctx.fillRect(flip?dx+90:dx+5,dy+28,15,5);
+    // Legs (animated)
+    ctx.fillStyle='#8b7240';
+    const lf=fr%2*4;
+    ctx.fillRect(dx+15,dy+40+lf,10,15-lf);
+    ctx.fillRect(dx+35,dy+40-lf+4,10,15-(-lf+4));
+    ctx.fillRect(dx+60,dy+40+lf,10,15-lf);
+    ctx.fillRect(dx+80,dy+40-lf+4,10,15-(-lf+4));
+    // Tail (wagging)
+    ctx.fillStyle='#c4a265';
+    const tw=Math.sin(S.frame*.15)*12;
+    const tx=flip?dx-5:dx+105;
+    ctx.save();ctx.translate(tx,dy+12);ctx.rotate((flip?-1:1)*(0.3+tw*0.03));
+    ctx.fillRect(0,-3,25,6);ctx.restore();
+    return d.x>-150&&d.x<cW+150;
   });
 
   // Marshrutka (big yellow van)
@@ -1517,6 +1573,89 @@ function renderNormalPhase(){
       ctx.beginPath();ctx.arc(m.x-8,m.y+vh-5,6+Math.random()*4,0,Math.PI*2);ctx.fill();
     }
     if(m.x>cW+150||m.x<-160)ents.marshrutka=null;
+  }
+
+  // Georgian neighbor
+  if(ents.neighbor){
+    const n=ents.neighbor;
+    // Walk in
+    if(n.phase==='enter'&&n.x<n.stopX){n.x+=n.vx;}
+    else if(n.phase==='enter'){n.phase='idle';}
+    // Walk out
+    if(n.phase==='exit'){n.x-=n.vx;if(n.x<-120)ents.neighbor=null;}
+    if(ents.neighbor){
+      const nx=n.x,ny=n.y,fr=S.frame>>3;
+      // Legs (animated when walking)
+      const walking=n.phase!=='idle';
+      const lf=walking?(fr%2)*5:0;
+      ctx.fillStyle='#2a2a3e';
+      ctx.fillRect(nx+15,ny+72+lf,14,20-lf);
+      ctx.fillRect(nx+45,ny+72-lf+5,14,20-(-lf+5));
+      // Shoes
+      ctx.fillStyle='#1a1a1a';
+      ctx.fillRect(nx+12,ny+88+lf,18,6);
+      ctx.fillRect(nx+42,ny+82-lf+10,18,6);
+      // Body (wide torso + belly)
+      ctx.fillStyle='#3a3a5e';
+      ctx.fillRect(nx+5,ny+30,65,44);
+      // Belly bulge
+      ctx.fillStyle='#33335a';
+      ctx.fillRect(nx+15,ny+50,45,20);
+      // Arms
+      ctx.fillStyle='#3a3a5e';
+      ctx.fillRect(nx-8,ny+32,16,35);
+      ctx.fillRect(nx+62,ny+32,16,35);
+      // Hands (skin)
+      ctx.fillStyle='#d4a574';
+      ctx.fillRect(nx-6,ny+64,12,10);
+      ctx.fillRect(nx+64,ny+64,12,10);
+      // Head
+      ctx.fillStyle='#d4a574';
+      ctx.fillRect(nx+15,ny,45,32);
+      // Hair (black, thick)
+      ctx.fillStyle='#1a1a1a';
+      ctx.fillRect(nx+12,ny-4,50,12);
+      // Eyebrows (thick, bushy)
+      ctx.fillStyle='#1a1a1a';
+      ctx.fillRect(nx+20,ny+8,12,4);
+      ctx.fillRect(nx+40,ny+8,12,4);
+      // Eyes
+      ctx.fillStyle='#222';
+      ctx.fillRect(nx+24,ny+14,6,5);
+      ctx.fillRect(nx+44,ny+14,6,5);
+      // Big nose
+      ctx.fillStyle='#c49060';
+      ctx.fillRect(nx+32,ny+14,10,10);
+      // Beard (thick black)
+      ctx.fillStyle='#1a1a1a';
+      ctx.fillRect(nx+15,ny+24,45,14);
+      ctx.fillRect(nx+18,ny+36,38,6);
+      // Mustache
+      ctx.fillRect(nx+22,ny+22,30,5);
+      // Smile line in beard
+      ctx.fillStyle='#d4574';
+      ctx.fillRect(nx+28,ny+30,18,3);
+      // Holding item
+      if(n.holding==='plate'){
+        // Khachapuri plate
+        ctx.fillStyle='#ddd';
+        ctx.fillRect(nx+66,ny+58,30,6);
+        ctx.fillStyle='#e8c44a';
+        ctx.fillRect(nx+70,ny+50,22,10);
+        // Egg yolk
+        ctx.fillStyle='#ff9f43';
+        ctx.fillRect(nx+77,ny+52,8,6);
+      } else if(n.holding==='bottle'){
+        // Chacha bottle
+        ctx.fillStyle='#4a7a4a';
+        ctx.fillRect(nx+68,ny+45,10,28);
+        ctx.fillStyle='#3a6a3a';
+        ctx.fillRect(nx+70,ny+38,6,10);
+        // Label
+        ctx.fillStyle='#eee';
+        ctx.fillRect(nx+69,ny+55,8,8);
+      }
+    }
   }
 
   // Bugs
@@ -1605,29 +1744,33 @@ function renderNormalPhase(){
 // ══════════════════════════════════════════════
 function startSwimPhase(){
   log('Event: Swim phase at '+Math.floor(S.progress)+'%');
-  S.swimPhase=true;
-  S.swimDimaY=cH/2;
-  S.swimDimaVY=0;
-  S.swimObstacles=[];
-  S.swimScore=0;
-  S.swimTimer=0;
-  S.swimStarted=true;
-  S.swimPassed=[];
-
   sfxSplash();
+  freezeInput();
 
-  // Water overlay
-  const ov=document.createElement('div');
-  ov.className='swim-overlay';ov.id='swimOv';
-  document.getElementById('gameArea').appendChild(ov);
-
-  // HUD
-  const hud=document.createElement('div');
-  hud.className='swim-hud';hud.id='swimHud';
-  hud.innerHTML='⚠️ УТЕЧКА ПАМЯТИ!<br>НАЖИМАЙ, ЧТОБЫ ПЛЫТЬ ВВЕРХ!';
-  document.getElementById('gameArea').appendChild(hud);
-
+  // Show popup first, delay actual gameplay start by 3s
   showMilestonePopup("⚠️ УТЕЧКА ПАМЯТИ!\n\nFlappy Dima Mode!\nНажимай чтобы плыть! 🏊");
+
+  setTimeout(()=>{
+    S.swimPhase=true;
+    S.swimDimaY=cH/2;
+    S.swimDimaVY=0;
+    S.swimObstacles=[];
+    S.swimScore=0;
+    S.swimTimer=0;
+    S.swimStarted=true;
+    S.swimPassed=[];
+
+    // Water overlay
+    const ov=document.createElement('div');
+    ov.className='swim-overlay';ov.id='swimOv';
+    document.getElementById('gameArea').appendChild(ov);
+
+    // HUD
+    const hud=document.createElement('div');
+    hud.className='swim-hud';hud.id='swimHud';
+    hud.innerHTML='⚠️ УТЕЧКА ПАМЯТИ!<br>НАЖИМАЙ, ЧТОБЫ ПЛЫТЬ ВВЕРХ!';
+    document.getElementById('gameArea').appendChild(hud);
+  },3000);
 }
 
 function renderSwimPhase(){
@@ -1915,13 +2058,17 @@ function showChachaPopup(stage){
   if(S.done)return;log(`Event: Chacha stage ${stage||1}`);
   stage=stage||1;
   sfxChacha();freezeInput();
+  // Spawn neighbor with bottle on first stage only
+  if(stage===1){
+    ents.neighbor={x:-120,y:cH*.25,vx:3,stopX:cW*.15,phase:'enter',holding:'bottle'};
+  }
   const d=document.createElement('div');
   d.className='chacha-popup';
 
   if(stage===1){
     d.innerHTML=`
       <h3>🍷 ЧАЧА!</h3>
-      <p>Соседи принесли домашнюю чачу. Выпить?</p>
+      <p>Сосед принёс домашнюю чачу. Выпить?</p>
       <div class="chacha-btns">
         <button class="chacha-yes" id="chYes">Конечно!</button>
         <button class="chacha-no" id="chNo">Я на диете</button>
@@ -1949,12 +2096,12 @@ function showChachaPopup(stage){
   delayButtons(d);
 
   const drinkChacha=(penalty)=>{
-    d.remove();
+    d.remove();dismissNeighbor();
+    setTimeout(sfxBurp,500);
     document.getElementById('game').classList.add('wobbly');
     if(penalty){
       showFlavor("Двойная чача... 🌀🌀 Мир вертится!");
       S.progress=Math.max(0,S.progress-8);updateHUD();
-      // Extended wobble for penalty
       setTimeout(()=>document.getElementById('game').classList.remove('wobbly'),15000);
     } else {
       showFlavor("Чача... мир поплыл. Зато весело!");
@@ -1981,13 +2128,18 @@ function showChachaPopup(stage){
 }
 
 // ── Khachapuri ──
+function dismissNeighbor(){
+  if(ents.neighbor)ents.neighbor.phase='exit';
+}
 function showKhachapuri(){
   if(S.done)return;freezeInput();sfxChacha();
+  // Spawn Georgian neighbor with plate
+  ents.neighbor={x:-120,y:cH*.25,vx:3,stopX:cW*.15,phase:'enter',holding:'plate'};
   const d=document.createElement('div');
   d.className='khacha-popup';
   d.innerHTML=`
     <h3>🥚 ХАЧАПУРИ!</h3>
-    <p>Свежий аджарский хачапури на столе. Съесть?</p>
+    <p>Сосед принёс свежий аджарский хачапури. Съесть?</p>
     <div class="khacha-btns">
       <button class="khacha-yes" id="khYes">Ооо да!</button>
       <button class="khacha-no" id="khNo">Диета...</button>
@@ -1997,14 +2149,14 @@ function showKhachapuri(){
   delayButtons(d);
 
   d.querySelector('#khYes').onclick=()=>{
-    d.remove();
+    d.remove();dismissNeighbor();
     showFlavor("Хачапури... 🤤 +5% к счастью, -3% к диете");
     S.progress=Math.min(100,S.progress+3);updateHUD();
     sfxTea();
     if(S.progress>=100)winGame();
   };
   d.querySelector('#khNo').onclick=()=>{
-    d.remove();
+    d.remove();dismissNeighbor();
     showFlavor("Сила воли уровня Dark Souls. Respect.");
     S.mult=2;S.boostEnd=Date.now()+4000;
     document.getElementById('boostInd').classList.add('active');
@@ -2018,9 +2170,9 @@ function spawnDog(){
   showFlavor("Тбилисская собака зашла проверить код 🐕");
   const dir=Math.random()>.5?1:-1;
   ents.dogs.push({
-    x:dir>0?-40:cW+40,
-    y:cH*.7,
-    vx:dir*1.2,
+    x:dir>0?-130:cW+130,
+    y:cH*.55,
+    vx:dir*1.8,
   });
 }
 
@@ -2434,7 +2586,8 @@ function handleGameClick(e){
           S.progress=Math.min(100,S.progress+5);updateHUD();
           screenFlash('rgba(255,215,0,.4)');
           S.bossActive=false;
-          if(S.progress>=100)winGame();
+          // Delay victory so fanfare + banner play fully
+          if(S.progress>=100)setTimeout(winGame,3500);
         } else {
           showFloat(x,y,`HP: ${b.hp}/${b.maxHP}`,'var(--red)');
         }
