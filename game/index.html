@@ -105,13 +105,13 @@
   @keyframes floatUp{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-60px) scale(.8)}}
 
   .flavor{
-    position:absolute;bottom:10px;left:50%;transform:translateX(-50%);
+    position:absolute;bottom:0;left:0;right:0;
     font-size:clamp(10px,2.8vw,13px);color:var(--yellow);text-align:center;
-    max-width:90%;padding:8px 14px;background:rgba(0,0,0,.85);
-    border:1px solid var(--yellow);z-index:15;pointer-events:none;
+    padding:14px 5%;background:linear-gradient(180deg,rgba(0,0,0,.0),rgba(0,0,0,.95) 15%);
+    border-top:1px solid rgba(255,211,42,.3);z-index:15;pointer-events:none;
     animation:flavorShow 4s ease-in-out forwards;line-height:1.8;
   }
-  @keyframes flavorShow{0%{opacity:0;transform:translateX(-50%) translateY(10px)}10%{opacity:1;transform:translateX(-50%) translateY(0)}80%{opacity:1}100%{opacity:0}}
+  @keyframes flavorShow{0%{opacity:0;transform:translateY(10px)}10%{opacity:1;transform:translateY(0)}80%{opacity:1}100%{opacity:0}}
 
   .boost-ind{
     position:absolute;top:8px;left:8px;font-size:clamp(11px,3vw,14px);
@@ -152,21 +152,21 @@
 
   /* Milestone popup */
   .milestone-popup{
-    position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
+    position:fixed;top:50%;left:5%;right:5%;transform:translateY(-50%);
     font-size:clamp(13px,3.5vw,16px);color:var(--yellow);text-align:center;
     line-height:2;z-index:30;pointer-events:none;
     animation:milestonePop 2.5s ease-out forwards;
     text-shadow:0 0 15px var(--yellow);
-    background:rgba(0,0,0,.85);padding:14px 22px;border:2px solid var(--yellow);
+    background:rgba(0,0,0,.9);padding:18px 5%;border:2px solid var(--yellow);
     white-space:pre-line;
   }
-  @keyframes milestonePop{0%{opacity:0;transform:translate(-50%,-50%) scale(.5)}15%{opacity:1;transform:translate(-50%,-50%) scale(1.1)}25%{transform:translate(-50%,-50%) scale(1)}80%{opacity:1}100%{opacity:0}}
+  @keyframes milestonePop{0%{opacity:0;transform:translateY(-50%) scale(.5)}15%{opacity:1;transform:translateY(-50%) scale(1.05)}25%{transform:translateY(-50%) scale(1)}80%{opacity:1}100%{opacity:0}}
 
   /* Fake crash dialog */
   .fake-crash{
-    position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
+    position:fixed;top:50%;left:5%;right:5%;transform:translateY(-50%);
     background:#c0c0c0;border:3px outset #fff;padding:0;
-    z-index:60;font-family:sans-serif;width:min(85%,320px);
+    z-index:60;font-family:sans-serif;
     box-shadow:4px 4px 0 rgba(0,0,0,.4);pointer-events:auto;
   }
   .crash-title{
@@ -191,10 +191,10 @@
 
   /* Chacha popup */
   .chacha-popup{
-    position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
+    position:fixed;top:50%;left:5%;right:5%;transform:translateY(-50%);
     background:var(--panel);border:2px solid var(--purple);
-    padding:20px;z-index:55;text-align:center;
-    width:min(85%,300px);pointer-events:auto;
+    padding:20px 5%;z-index:55;text-align:center;
+    pointer-events:auto;
   }
   .chacha-popup h3{font-size:clamp(14px,4vw,18px);color:var(--purple);margin-bottom:12px;line-height:1.6}
   .chacha-popup p{font-size:clamp(10px,3vw,13px);color:var(--dim);margin-bottom:16px;line-height:1.8}
@@ -220,10 +220,10 @@
 
   /* Khachapuri choice */
   .khacha-popup{
-    position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
+    position:fixed;top:50%;left:5%;right:5%;transform:translateY(-50%);
     background:var(--panel);border:2px solid var(--orange);
-    padding:20px;z-index:55;text-align:center;
-    width:min(85%,300px);pointer-events:auto;
+    padding:20px 5%;z-index:55;text-align:center;
+    pointer-events:auto;
   }
   .khacha-popup h3{font-size:clamp(14px,4vw,18px);color:var(--orange);margin-bottom:10px;line-height:1.6}
   .khacha-popup p{font-size:clamp(10px,3vw,13px);color:var(--dim);margin-bottom:14px;line-height:1.8}
@@ -407,7 +407,7 @@
     ⚠️ Жди сюрпризов...
   </div>
   <button class="start-btn" id="startBtn">► НАЧАТЬ ДЕНЬ</button>
-  <div style="font-size:6px;color:rgba(255,255,255,.15);margin-top:12px">v2.2.0</div>
+  <div style="font-size:6px;color:rgba(255,255,255,.15);margin-top:12px">v2.3.0</div>
 </div>
 
 <!-- GAME -->
@@ -456,7 +456,7 @@
 // ══════════════════════════════════════════════
 //  VERSION & LOGGING
 // ══════════════════════════════════════════════
-const GAME_VERSION='2.2.0';
+const GAME_VERSION='2.3.0';
 const gameLog=[];
 function log(msg){
   const ts=new Date().toISOString().slice(11,19);
@@ -939,8 +939,8 @@ function initBackgroundElements(){
     speed:.1+Math.random()*.3,alpha:.1+Math.random()*.15
   }));
   // Fireflies (visible at dusk/night)
-  fireflies=Array.from({length:12},()=>({
-    x:Math.random()*cW,y:cH*.3+Math.random()*cH*.5,
+  fireflies=Array.from({length:8},()=>({
+    x:Math.random()*cW,y:cH*.5+Math.random()*cH*.4,
     phase:Math.random()*Math.PI*2,speed:.3+Math.random()*.5,
     size:1.5+Math.random()*1.5,drift:Math.random()*2-1
   }));
@@ -1062,16 +1062,47 @@ function drawWindowView(tc){
   }
 }
 
+// Room walls (below window, creates indoor feel)
+function drawRoom(tc){
+  const winB=cH*.42;
+  // Dark room wall from window bottom to canvas bottom
+  const wallGrad=ctx.createLinearGradient(0,winB,0,cH);
+  wallGrad.addColorStop(0,'#15142e');
+  wallGrad.addColorStop(.3,'#12112a');
+  wallGrad.addColorStop(1,'#0e0d22');
+  ctx.fillStyle=wallGrad;
+  ctx.fillRect(0,winB,cW,cH-winB);
+  // Subtle wall texture (very faint horizontal lines)
+  ctx.strokeStyle='rgba(255,255,255,.012)';ctx.lineWidth=1;
+  for(let wy=winB+20;wy<cH;wy+=25){
+    ctx.beginPath();ctx.moveTo(0,wy);ctx.lineTo(cW,wy);ctx.stroke();
+  }
+  // Window sill (small shelf below window)
+  const winL=cW*.04,winR=cW*.96;
+  ctx.fillStyle='rgba(90,60,35,.6)';
+  ctx.fillRect(winL-5,winB+4,winR-winL+10,4);
+  ctx.fillStyle='rgba(50,30,15,.4)';
+  ctx.fillRect(winL-5,winB+8,winR-winL+10,2);
+  // Floor line
+  const floorY=cH*.85;
+  ctx.fillStyle='rgba(255,255,255,.03)';
+  ctx.fillRect(0,floorY,cW,1);
+  // Baseboard
+  ctx.fillStyle='rgba(40,30,20,.3)';
+  ctx.fillRect(0,floorY+1,cW,4);
+}
+
 // Room lighting (desk lamp based on time)
 function drawRoomLight(tc){
-  if(tc.star>.2){
-    // Lamp glow on desk area
-    const lampX=cW*.55,lampY=cH*.45;
-    const glow=ctx.createRadialGradient(lampX,lampY,0,lampX,lampY,cH*.35);
-    glow.addColorStop(0,'rgba(255,200,100,.08)');
+  if(tc.star>.15){
+    // Warm lamp glow on desk area (only in room, below window)
+    const lampX=cW*.55,lampY=cH*.52;
+    const glow=ctx.createRadialGradient(lampX,lampY,0,lampX,lampY,cH*.3);
+    glow.addColorStop(0,`rgba(255,200,100,${.06+tc.star*.06})`);
+    glow.addColorStop(.5,`rgba(255,200,100,${.02+tc.star*.03})`);
     glow.addColorStop(1,'rgba(255,200,100,0)');
     ctx.fillStyle=glow;
-    ctx.fillRect(0,0,cW,cH);
+    ctx.fillRect(0,cH*.42,cW,cH*.58);
   }
 }
 
@@ -1137,31 +1168,33 @@ function gameLoop(){
     return ss.life>0;
   });
 
-  // Parallax clouds
+  // Parallax clouds (only visible in window area)
+  ctx.save();
+  ctx.beginPath();ctx.rect(cW*.04,cH*.01,cW*.92,cH*.41);ctx.clip();
   clouds.forEach(cl=>{
     cl.x-=cl.speed;
     if(cl.x+cl.w<-20)cl.x=cW+20+Math.random()*100;
-    const ca=cl.alpha*(1-tc.star*.5); // fade clouds at night
+    const ca=cl.alpha*(1-tc.star*.5);
     if(ca>.02){
       ctx.fillStyle=`rgba(200,210,230,${ca})`;
       ctx.beginPath();
       ctx.ellipse(cl.x+cl.w/2,cl.y,cl.w/2,cl.h/2,0,0,Math.PI*2);
       ctx.fill();
-      // Secondary cloud puff
       ctx.beginPath();
       ctx.ellipse(cl.x+cl.w*.3,cl.y-cl.h*.2,cl.w*.3,cl.h*.35,0,0,Math.PI*2);
       ctx.fill();
     }
   });
+  ctx.restore();
 
-  // Fireflies (dusk & night)
+  // Fireflies (dusk & night, room area only)
   if(tc.star>.15){
     fireflies.forEach(ff=>{
       ff.phase+=.03;
       ff.x+=Math.sin(ff.phase)*ff.drift*.3;
       ff.y+=Math.cos(ff.phase*.7)*ff.drift*.2;
       if(ff.x<0)ff.x=cW;if(ff.x>cW)ff.x=0;
-      if(ff.y<cH*.2)ff.y=cH*.7;if(ff.y>cH)ff.y=cH*.3;
+      if(ff.y<cH*.45)ff.y=cH*.7;if(ff.y>cH)ff.y=cH*.5;
       const fa=(.3+.7*Math.abs(Math.sin(ff.phase*1.5)))*Math.min(1,tc.star*1.5);
       ctx.fillStyle=`rgba(200,255,100,${fa})`;
       ctx.beginPath();ctx.arc(ff.x,ff.y,ff.size,0,Math.PI*2);ctx.fill();
@@ -1171,19 +1204,23 @@ function gameLoop(){
     });
   }
 
-  // Ambient code symbols
+  // Ambient code symbols (only in room area below window)
+  const roomTop=cH*.44;
   codeSymbols.forEach(cs=>{
-    cs.y-=cs.vy;if(cs.y<-20)cs.y=cH+20;
-    ctx.fillStyle=`rgba(255,255,255,${cs.alpha})`;
-    ctx.font=`${cs.size}px "Press Start 2P"`;
-    ctx.fillText(cs.text,cs.x,cs.y);
+    cs.y-=cs.vy;
+    if(cs.y<roomTop)cs.y=cH+20;
+    if(cs.y>roomTop){
+      ctx.fillStyle=`rgba(255,255,255,${cs.alpha})`;
+      ctx.font=`${cs.size}px "Press Start 2P"`;
+      ctx.fillText(cs.text,cs.x,cs.y);
+    }
   });
-
-  // Tbilisi skyline (subtle bottom)
-  drawSkyline(tc);
 
   // Window with mountains + sun
   drawWindowView(tc);
+
+  // Room walls (covers background below window, creates indoor feel)
+  drawRoom(tc);
 
   // Room lighting
   drawRoomLight(tc);
@@ -1217,9 +1254,24 @@ function renderNormalPhase(){
   // Desk
   drawDesk(ctx,dimaX-4,dimaY+9,ps);
 
+  // Keyboard on desk
+  const kbX=(dimaX-1)*ps,kbY=(dimaY+8)*ps;
+  ctx.fillStyle='#333';ctx.fillRect(kbX,kbY,ps*8,ps*1.5);
+  ctx.fillStyle='#444';ctx.fillRect(kbX+ps*.5,kbY+ps*.2,ps*7,ps);
+  for(let k=0;k<6;k++){ctx.fillStyle='#555';ctx.fillRect(kbX+ps*(k*1.1+.8),kbY+ps*.3,ps*.7,ps*.6)}
+
+  // Mouse on desk
+  ctx.fillStyle='#555';ctx.fillRect((dimaX+8)*ps,(dimaY+8)*ps,ps*1.5,ps*2);
+  ctx.fillStyle='#666';ctx.fillRect((dimaX+8)*ps,(dimaY+8)*ps,ps*1.5,ps*.5);
+
   // Monitors
   drawMonitor(ctx,dimaX-1,dimaY-1,ps,S.frame>>3);
   if(S.milestones[50])drawMonitor(ctx,dimaX+9,dimaY-1,ps,(S.frame>>3)+2);
+
+  // Monitor glow on desk/character
+  const monGlow=ctx.createRadialGradient(cW/2,dimaY*ps,0,cW/2,dimaY*ps,cW*.25);
+  monGlow.addColorStop(0,'rgba(0,180,255,.06)');monGlow.addColorStop(1,'rgba(0,180,255,0)');
+  ctx.fillStyle=monGlow;ctx.fillRect(0,cH*.42,cW,cH*.58);
 
   // Tea on desk
   drawTeaCup(ctx,dimaX+8,dimaY+7,ps);
