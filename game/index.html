@@ -108,13 +108,13 @@
   @keyframes floatUp{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-60px) scale(.8)}}
 
   .flavor{
-    position:absolute;bottom:0;left:0;right:0;
+    position:absolute;top:0;left:0;right:0;
     font-size:clamp(10px,2.8vw,13px);color:var(--yellow);text-align:center;
-    padding:14px 5%;background:linear-gradient(180deg,rgba(0,0,0,.0),rgba(0,0,0,.95) 15%);
-    border-top:1px solid rgba(255,211,42,.3);z-index:15;pointer-events:none;
+    padding:10px 5%;background:linear-gradient(0deg,rgba(0,0,0,.0),rgba(0,0,0,.95) 85%);
+    border-bottom:1px solid rgba(255,211,42,.3);z-index:15;pointer-events:none;
     animation:flavorShow 4s ease-in-out forwards;line-height:1.8;
   }
-  @keyframes flavorShow{0%{opacity:0;transform:translateY(10px)}10%{opacity:1;transform:translateY(0)}80%{opacity:1}100%{opacity:0}}
+  @keyframes flavorShow{0%{opacity:0;transform:translateY(-10px)}10%{opacity:1;transform:translateY(0)}80%{opacity:1}100%{opacity:0}}
 
   .boost-ind{
     position:absolute;top:8px;left:8px;font-size:clamp(11px,3vw,14px);
@@ -520,10 +520,99 @@ function sfxMilestone(){[523,659,784,1047].forEach((f,i)=>setTimeout(()=>tone(f,
 function sfxVictory(){[523,523,587,659,659,587,523,494,440,440,494,523,523,494,494].forEach((f,i)=>setTimeout(()=>tone(f,.18,'square',.05),i*120))}
 function sfxDied(){tone(200,.3,'sawtooth',.07);setTimeout(()=>tone(150,.4,'sawtooth',.05),200);setTimeout(()=>tone(100,.6,'sawtooth',.04),400)}
 function sfxSplash(){tone(200,.2,'sine',.05);tone(300,.3,'sine',.04);setTimeout(()=>tone(150,.2,'sine',.03),100)}
-function sfxBoss(){tone(100,.4,'sawtooth',.08);setTimeout(()=>tone(80,.5,'sawtooth',.06),200)}
-function sfxDog(){tone(400,.08,'square',.04);setTimeout(()=>tone(500,.08,'square',.04),100);setTimeout(()=>tone(350,.12,'square',.04),200)}
-function sfxMarshrutka(){for(let i=0;i<3;i++)setTimeout(()=>tone(300+i*50,.08,'sawtooth',.05),i*80)}
-function sfxChacha(){tone(250,.2,'triangle',.04);setTimeout(()=>tone(200,.3,'triangle',.03),150)}
+function sfxBoss(){
+  // Epic Dark Souls boss intro — ominous descending brass + war drums
+  if(!actx||muted)return;
+  // Drum hits (low frequency thuds)
+  [0,250,500].forEach(d=>setTimeout(()=>{
+    const o=actx.createOscillator(),g=actx.createGain();
+    o.type='sawtooth';o.frequency.setValueAtTime(55,actx.currentTime);
+    o.frequency.exponentialRampToValueAtTime(30,actx.currentTime+.3);
+    g.gain.setValueAtTime(.15,actx.currentTime);
+    g.gain.exponentialRampToValueAtTime(.001,actx.currentTime+.35);
+    o.connect(g);g.connect(actx.destination);o.start();o.stop(actx.currentTime+.35);
+  },d));
+  // Ominous descending melody (minor scale)
+  const notes=[330,311,294,262,247,220,196,165];
+  notes.forEach((f,i)=>setTimeout(()=>tone(f,.35,'sawtooth',.06),i*180+100));
+  // Sustained low drone
+  setTimeout(()=>{
+    const o=actx.createOscillator(),g=actx.createGain();
+    o.type='sawtooth';o.frequency.setValueAtTime(82,actx.currentTime);
+    g.gain.setValueAtTime(.06,actx.currentTime);
+    g.gain.linearRampToValueAtTime(.08,actx.currentTime+.5);
+    g.gain.exponentialRampToValueAtTime(.001,actx.currentTime+2);
+    o.connect(g);g.connect(actx.destination);o.start();o.stop(actx.currentTime+2);
+  },700);
+}
+function sfxBossDefeat(){
+  // Triumphant ascending fanfare — boss is dead!
+  if(!actx||muted)return;
+  // Victory drum roll
+  for(let i=0;i<6;i++)setTimeout(()=>tone(80+i*5,.08,'sawtooth',.04),i*60);
+  // Ascending triumphant melody (C major scale rising to high)
+  const fanfare=[262,330,392,523,659,784,880,1047];
+  fanfare.forEach((f,i)=>setTimeout(()=>{
+    tone(f,.3,'square',.06);
+    // Harmony note (fifth above)
+    if(i>=3)tone(f*1.5,.25,'square',.03);
+  },400+i*140));
+  // Final sustained chord
+  setTimeout(()=>{
+    [1047,1319,1568].forEach(f=>tone(f,.8,'square',.04));
+  },1600);
+}
+function sfxDog(){
+  // "Woof woof!" — short sharp barks with pitch bend
+  if(!actx||muted)return;
+  function bark(delay){
+    setTimeout(()=>{
+      const o=actx.createOscillator(),g=actx.createGain();
+      o.type='sawtooth';
+      o.frequency.setValueAtTime(350,actx.currentTime);
+      o.frequency.exponentialRampToValueAtTime(180,actx.currentTime+.12);
+      g.gain.setValueAtTime(.12,actx.currentTime);
+      g.gain.exponentialRampToValueAtTime(.001,actx.currentTime+.15);
+      o.connect(g);g.connect(actx.destination);o.start();o.stop(actx.currentTime+.15);
+    },delay);
+  }
+  bark(0);bark(200);bark(600);bark(800);
+}
+function sfxMarshrutka(){
+  // Loud honking — BEEP BEEP!
+  if(!actx||muted)return;
+  function honk(delay){
+    setTimeout(()=>{
+      const o=actx.createOscillator(),g=actx.createGain();
+      o.type='square';o.frequency.setValueAtTime(440,actx.currentTime);
+      o.frequency.setValueAtTime(520,actx.currentTime+.05);
+      g.gain.setValueAtTime(.15,actx.currentTime);
+      g.gain.exponentialRampToValueAtTime(.001,actx.currentTime+.3);
+      o.connect(g);g.connect(actx.destination);o.start();o.stop(actx.currentTime+.3);
+    },delay);
+  }
+  honk(0);honk(350);honk(900);
+}
+function sfxChacha(){
+  // Georgian neighbor singing/humming — a little melodic phrase
+  if(!actx||muted)return;
+  const notes=[220,262,294,330,294,262,220,196];
+  notes.forEach((f,i)=>{
+    setTimeout(()=>{
+      const o=actx.createOscillator(),g=actx.createGain();
+      o.type='triangle';
+      o.frequency.setValueAtTime(f,actx.currentTime);
+      // Slight vibrato
+      const lfo=actx.createOscillator();lfo.frequency.value=5;
+      const lfoG=actx.createGain();lfoG.gain.value=3;
+      lfo.connect(lfoG);lfoG.connect(o.frequency);lfo.start();
+      g.gain.setValueAtTime(.08,actx.currentTime);
+      g.gain.exponentialRampToValueAtTime(.001,actx.currentTime+.2);
+      o.connect(g);g.connect(actx.destination);o.start();o.stop(actx.currentTime+.22);
+      lfo.stop(actx.currentTime+.22);
+    },i*130);
+  });
+}
 function sfxKiss(){tone(520,.15,'sine',.06);setTimeout(()=>tone(660,.2,'sine',.05),100)}
 
 
@@ -895,6 +984,8 @@ const S={
   goldenCommitTimer:0,
   totalTeaCollected:0,caffeineActive:false,caffeineEnd:0,
   wifeCookCount:0,  // tracks which cooking event to show next
+  // Monitor fetch animation
+  monitorFetch:false,monitorFetchPhase:0,monitorFetchTimer:0,monitorFetchX:0,
 };
 
 const ents={bugs:[],teas:[],particles:[],wife:null,dogs:[],marshrutka:null};
@@ -938,7 +1029,7 @@ function setupCanvas(){
   canvas.style.width=cW+'px';canvas.style.height=cH+'px';
   ctx=canvas.getContext('2d');ctx.scale(d,d);
   ctx.imageSmoothingEnabled=false;
-  ps=Math.max(7,Math.floor(cW/50));
+  ps=Math.max(8,Math.floor(cW/40));
 }
 
 // ══════════════════════════════════════════════
@@ -1285,7 +1376,7 @@ function renderNormalPhase(){
     showFlavor("Чайный перегруз прошёл... 😴");
   }
   const dimaX=Math.floor(cW/2/ps)-3;
-  const dimaY=Math.floor(cH*.58/ps);
+  const dimaY=Math.floor(cH*.62/ps);
 
   // Desk
   drawDesk(ctx,dimaX-4,dimaY+9,ps);
@@ -1312,8 +1403,41 @@ function renderNormalPhase(){
   // Tea on desk
   drawTeaCup(ctx,dimaX+8,dimaY+7,ps);
 
-  // Dima
-  drawDima(ctx,dimaX,dimaY,ps,S.frame>>2,false);
+  // Dima (with monitor-fetch animation)
+  if(S.monitorFetch){
+    S.monitorFetchTimer++;
+    const speed=3;
+    const targetRight=cW+30;// run off screen right
+    const deskPos=dimaX*ps;// original desk position in pixels
+    if(S.monitorFetchPhase===0){
+      // Phase 0: run right off screen
+      S.monitorFetchX+=speed;
+      const drawX=Math.floor((deskPos+S.monitorFetchX)/ps);
+      drawDima(ctx,drawX,dimaY,ps,S.frame>>1,false);
+      if(deskPos+S.monitorFetchX>targetRight){S.monitorFetchPhase=1;S.monitorFetchTimer=0}
+    } else if(S.monitorFetchPhase===1){
+      // Phase 1: brief pause off-screen (grabbing monitor)
+      if(S.monitorFetchTimer>20){S.monitorFetchPhase=2;S.monitorFetchTimer=0}
+    } else if(S.monitorFetchPhase===2){
+      // Phase 2: run back carrying monitor
+      S.monitorFetchX-=speed;
+      const drawX=Math.floor((deskPos+S.monitorFetchX)/ps);
+      // Draw Dima running back (faster animation frame)
+      drawDima(ctx,drawX,dimaY,ps,S.frame>>1,false);
+      // Draw monitor being carried above Dima
+      const monX=drawX+2,monY=dimaY-5;
+      ctx.fillStyle='#1a1a2e';ctx.fillRect(monX*ps,monY*ps,ps*7,ps*5);
+      ctx.fillStyle='#00d4ff';ctx.fillRect((monX+.5)*ps,(monY+.5)*ps,ps*6,ps*3.5);
+      ctx.fillStyle='#333';ctx.fillRect((monX+2)*ps,(monY+5)*ps,ps*3,ps*1);
+      if(S.monitorFetchX<=0){
+        S.monitorFetch=false;
+        sfxMilestone();
+        showFlavor("Монитор установлен! Продуктивность x2! 🖥️");
+      }
+    }
+  } else {
+    drawDima(ctx,dimaX,dimaY,ps,S.frame>>2,false);
+  }
 
   // Dogs
   ents.dogs=ents.dogs.filter(d=>{
@@ -1322,24 +1446,43 @@ function renderNormalPhase(){
     return d.x>-50&&d.x<cW+50;
   });
 
-  // Marshrutka
+  // Marshrutka (big yellow van)
   if(ents.marshrutka){
     const m=ents.marshrutka;
     m.x+=m.vx;
-    // Draw marshrutka (simple van shape)
+    const vw=120,vh=50;// van size
+    // Body
     ctx.fillStyle='#ffcc00';
-    ctx.fillRect(m.x,m.y,60,25);
-    ctx.fillStyle='#333';
-    ctx.fillRect(m.x+5,m.y+2,15,12);
-    ctx.fillRect(m.x+25,m.y+2,15,12);
-    ctx.fillStyle='#111';
-    ctx.fillRect(m.x+5,m.y+25,12,8);
-    ctx.fillRect(m.x+43,m.y+25,12,8);
+    ctx.fillRect(m.x,m.y,vw,vh);
+    // Roof rack
+    ctx.fillStyle='#cc9900';
+    ctx.fillRect(m.x+10,m.y-6,vw-20,6);
+    // Windows
+    ctx.fillStyle='#8ad';
+    ctx.fillRect(m.x+8,m.y+6,28,22);
+    ctx.fillRect(m.x+42,m.y+6,28,22);
+    ctx.fillRect(m.x+76,m.y+6,28,22);
+    // Window dividers
+    ctx.fillStyle='#cc9900';
+    ctx.fillRect(m.x+38,m.y+4,4,26);
+    ctx.fillRect(m.x+72,m.y+4,4,26);
+    // Wheels
+    ctx.fillStyle='#222';
+    ctx.beginPath();ctx.arc(m.x+25,m.y+vh+4,10,0,Math.PI*2);ctx.fill();
+    ctx.beginPath();ctx.arc(m.x+vw-25,m.y+vh+4,10,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#555';
+    ctx.beginPath();ctx.arc(m.x+25,m.y+vh+4,5,0,Math.PI*2);ctx.fill();
+    ctx.beginPath();ctx.arc(m.x+vw-25,m.y+vh+4,5,0,Math.PI*2);ctx.fill();
     // Label
     ctx.fillStyle='#000';
-    ctx.font='6px sans-serif';
-    ctx.fillText('მარშრუტკა',m.x+8,m.y+20);
-    if(m.x>cW+80||m.x<-100)ents.marshrutka=null;
+    ctx.font=`${Math.max(8,ps)}px "Press Start 2P"`;
+    ctx.fillText('მარშრუტკა',m.x+12,m.y+vh-8);
+    // Exhaust puff
+    if(S.frame%8<4){
+      ctx.fillStyle='rgba(150,150,150,.3)';
+      ctx.beginPath();ctx.arc(m.x-8,m.y+vh-5,6+Math.random()*4,0,Math.PI*2);ctx.fill();
+    }
+    if(m.x>cW+150||m.x<-160)ents.marshrutka=null;
   }
 
   // Bugs
@@ -1625,22 +1768,34 @@ function handleSwimClick(){
 function checkEvents(){
   const p=Math.floor(S.progress);
 
-  // Crash dialog at ~20%
-  if(p>=20&&!S.crashShown){
+  // Crash dialog at ~10%
+  if(p>=10&&!S.crashShown){
     S.crashShown=true;
     setTimeout(showFakeCrash,2000);
   }
 
-  // Dogs at ~30%
-  if(p>=30&&!S.dogShown){
+  // Dogs at ~20%
+  if(p>=20&&!S.dogShown){
     S.dogShown=true;
     setTimeout(spawnDog,3000);
   }
 
-  // Khachapuri at ~40%
-  if(p>=40&&!S.khachaShown){
+  // Typing challenge (code review) at ~30%
+  if(p>=30&&!S.typingShown){
+    S.typingShown=true;
+    setTimeout(showTypingChallenge,2000);
+  }
+
+  // Khachapuri at ~38%
+  if(p>=38&&!S.khachaShown){
     S.khachaShown=true;
     setTimeout(showKhachapuri,2000);
+  }
+
+  // Stack Overflow down at ~46%
+  if(p>=46&&!S.soDownShown){
+    S.soDownShown=true;
+    setTimeout(showSODown,3000);
   }
 
   // Marshrutka at ~55%
@@ -1649,32 +1804,20 @@ function checkEvents(){
     setTimeout(spawnMarshrutka,2000);
   }
 
-  // Swimming at ~65%
-  if(p>=65&&!S.milestones[65]){
+  // Swimming (memory leak) at ~63%
+  if(p>=63&&!S.milestones[65]){
     S.milestones[65]=true;
     startSwimPhase();
   }
 
-  // Typing challenge at ~35%
-  if(p>=35&&!S.typingShown){
-    S.typingShown=true;
-    setTimeout(showTypingChallenge,2000);
-  }
-
-  // Stack Overflow down at ~50%
-  if(p>=50&&!S.soDownShown){
-    S.soDownShown=true;
-    setTimeout(showSODown,3000);
-  }
-
-  // Chacha at ~78%
-  if(p>=78&&!S.chachaShown){
+  // Chacha at ~74%
+  if(p>=74&&!S.chachaShown){
     S.chachaShown=true;
     setTimeout(showChachaPopup,2000);
   }
 
-  // Fog gate before boss at ~85%
-  if(p>=85&&!S.fogGateShown){
+  // Fog gate before boss at ~86%
+  if(p>=86&&!S.fogGateShown){
     S.fogGateShown=true;
     setTimeout(showFogGate,1500);
   }
@@ -1687,28 +1830,50 @@ function checkEvents(){
   }
 }
 
-// ── Fake Crash ──
+// ── Fake Crash (interactive multi-stage) ──
 function showFakeCrash(){
   if(S.done)return;log('Event: Fake crash at '+Math.floor(S.progress)+'%');
+  freezeInput();
+  let stage=0;
+  const stages=[
+    {title:'gamemaker.exe',body:'❌ GameMaker Studio has stopped working.<br><br>A problem caused the program to stop working correctly.<br>Windows will close the program and notify you if a solution is available.',btn:'OK'},
+    {title:'gamemaker.exe (2)',body:'❌ GameMaker Studio has stopped working. Опять.<br><br>Серьёзно, мы не знаем почему. Попробуйте ещё раз.',btn:'Ещё раз...'},
+    {title:'runtime_error.dll',body:'⚠️ Unhandled Exception at 0xDEADBEEF<br><br>ERROR: Слишком много таланта в одном разработчике.<br>Рекомендация: Сделать перерыв на чай.',btn:'Чай? 🍵'},
+    {title:'SYSTEM RECOVERY',body:'🔄 Восстановление системы...<br><br>Файлы Димы: ✅ Сохранены<br>Баги: ❌ Всё ещё здесь<br>Чай: 🍵 Остыл<br>Надежда: ✨ +2%',btn:'Перезагрузить! 🔄'},
+  ];
   const d=document.createElement('div');
   d.className='fake-crash';
-  d.innerHTML=`
-    <div class="crash-title">
-      <span>gamemaker.exe</span>
-      <div class="crash-x" id="crashX">✕</div>
-    </div>
-    <div class="crash-body">
-      ❌ GameMaker Studio has stopped working.<br><br>
-      A problem caused the program to stop working correctly.
-      Windows will close the program and notify you if a solution is available.<br>
-      <button class="crash-btn" id="crashBtn">OK</button>
-    </div>
-  `;
+  function renderStage(){
+    const s=stages[stage];
+    d.innerHTML=`
+      <div class="crash-title">
+        <span>${s.title}</span>
+        <div class="crash-x" id="crashX">✕</div>
+      </div>
+      <div class="crash-body">
+        ${s.body}<br>
+        <button class="crash-btn" id="crashBtn">${s.btn}</button>
+      </div>
+    `;
+    delayButtons(d,500);
+    d.querySelector('#crashX').onclick=advance;
+    d.querySelector('#crashBtn').onclick=advance;
+  }
+  function advance(){
+    stage++;
+    if(stage>=stages.length){
+      d.remove();
+      S.progress=Math.min(100,S.progress+2);updateHUD();
+      screenFlash('rgba(0,212,255,.2)');
+      showFlavor("Система перезагружена! +2% к сборке. GameMaker работает. Наверное.");
+      if(S.progress>=100)winGame();
+    } else {
+      shakeScreen();
+      renderStage();
+    }
+  }
   document.body.appendChild(d);
-
-  const close=()=>{d.remove();showFlavor("...шутка. GameMaker работает. Наверное.")};
-  d.querySelector('#crashX').onclick=close;
-  d.querySelector('#crashBtn').onclick=close;
+  renderStage();
 }
 
 // ── Chacha ──
@@ -1783,7 +1948,7 @@ function showChachaPopup(stage){
 
 // ── Khachapuri ──
 function showKhachapuri(){
-  if(S.done)return;freezeInput();
+  if(S.done)return;freezeInput();sfxChacha();
   const d=document.createElement('div');
   d.className='khacha-popup';
   d.innerHTML=`
@@ -1831,7 +1996,7 @@ function spawnMarshrutka(){
   sfxMarshrutka();
   freezeInput();
   showFlavor("⚠️ МАРШРУТКА! Берегись!");
-  ents.marshrutka={x:-80,y:cH*.4,vx:6};
+  ents.marshrutka={x:-160,y:cH*.35,vx:5};
   // If not clicked away, lose progress
   setTimeout(()=>{
     if(ents.marshrutka){
@@ -1934,7 +2099,7 @@ const CODE_PUZZLES=[
 function showTypingChallenge(){
   if(S.done)return;log('Event: Code puzzle at '+Math.floor(S.progress)+'%');
   S.typingActive=true;
-  sfxBoss();
+  sfxBoss();freezeInput();
   const puzzle=CODE_PUZZLES[Math.floor(Math.random()*CODE_PUZZLES.length)];
   const correctOrder=[...puzzle.lines];
   const shuffled=[...puzzle.lines];
@@ -2228,7 +2393,7 @@ function handleGameClick(e){
           const v=document.createElement('div');v.className='boss-victory';
           v.innerHTML='<h2>GREAT BUG FELLED</h2><p>Сегфолт повержен</p>';
           document.body.appendChild(v);setTimeout(()=>v.remove(),3500);
-          sfxVictory();
+          sfxBossDefeat();
           S.progress=Math.min(100,S.progress+5);updateHUD();
           screenFlash('rgba(255,215,0,.4)');
           S.bossActive=false;
@@ -2312,6 +2477,8 @@ function checkMilestones(){
   if(p>=50&&!S.milestones[50]){
     S.milestones[50]=true;sfxMilestone();
     showMilestonePopup("50% — БЕТА ВЕРСИЯ!\n+1 Монитор! 🖥️");
+    // Start monitor-fetch animation: Dima runs right, grabs monitor, runs back
+    S.monitorFetch=true;S.monitorFetchPhase=0;S.monitorFetchTimer=0;S.monitorFetchX=0;
   }
 }
 
