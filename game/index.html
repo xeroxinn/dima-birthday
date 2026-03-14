@@ -108,13 +108,12 @@
   @keyframes floatUp{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-60px) scale(.8)}}
 
   .flavor{
-    position:absolute;top:0;left:0;right:0;
     font-size:clamp(10px,2.8vw,13px);color:var(--yellow);text-align:center;
-    padding:10px 5%;background:linear-gradient(0deg,rgba(0,0,0,.0),rgba(0,0,0,.95) 85%);
-    border-bottom:1px solid rgba(255,211,42,.3);z-index:15;pointer-events:none;
+    padding:8px 5%;background:var(--panel);
+    border-bottom:1px solid rgba(255,211,42,.3);flex-shrink:0;z-index:15;
     animation:flavorShow 4s ease-in-out forwards;line-height:1.8;
   }
-  @keyframes flavorShow{0%{opacity:0;transform:translateY(-10px)}10%{opacity:1;transform:translateY(0)}80%{opacity:1}100%{opacity:0}}
+  @keyframes flavorShow{0%{opacity:0;max-height:0;padding:0 5%}10%{opacity:1;max-height:50px;padding:8px 5%}80%{opacity:1;max-height:50px;padding:8px 5%}100%{opacity:0;max-height:0;padding:0 5%}}
 
   .boost-ind{
     position:absolute;top:8px;left:8px;font-size:clamp(11px,3vw,14px);
@@ -322,14 +321,8 @@
   .so-down h2{font-size:clamp(16px,5vw,24px);color:var(--red);margin-bottom:12px;line-height:1.6}
   .so-down p{font-size:clamp(10px,3vw,13px);color:var(--dim);line-height:1.8}
 
-  /* Gift copy */
-  .gift{cursor:pointer;transition:border-color .3s,box-shadow .3s}
-  .gift:hover{border-color:var(--green);box-shadow:0 0 12px rgba(0,255,136,.3)}
-  .gift.copied{border-color:var(--green)}
-  .gift .copy-hint{font-size:clamp(8px,2.2vw,10px);color:var(--dim);margin-top:4px}
-  .gift .copied-msg{font-size:clamp(9px,2.5vw,11px);color:var(--green);margin-top:4px;display:none}
-  .gift.copied .copy-hint{display:none}
-  .gift.copied .copied-msg{display:block}
+  /* Gift */
+  .gift{transition:border-color .3s,box-shadow .3s}
 
   /* Typing challenge */
   .typing-overlay{
@@ -459,8 +452,8 @@
       <div class="prog-inner" id="pBar"></div>
       <div class="milestone-mark" style="left:25%"></div>
       <div class="milestone-mark" style="left:50%"></div>
-      <div class="milestone-mark" style="left:65%"></div>
-      <div class="milestone-mark" style="left:85%"></div>
+      <div class="milestone-mark" style="left:72%"></div>
+      <div class="milestone-mark" style="left:94%"></div>
     </div>
   </div>
   <div class="game-area" id="gameArea">
@@ -478,8 +471,10 @@
   <div class="bnote">(*почти)</div>
   <div class="bday">🎂 С Днём Рождения,<br>Дима!</div>
   <div class="bday-sub">Ты собрал игру — вот твоя награда:</div>
-  <div class="gift" id="g1"><div class="gift-label">🎮 ПОДАРОК #1</div><div class="gift-code" id="gc1">XXXXX-XXXXX-XXXXX</div><div class="copy-hint">нажми чтобы скопировать</div><div class="copied-msg">✓ Скопировано!</div></div>
-  <div class="gift" id="g2"><div class="gift-label">🎮 ПОДАРОК #2</div><div class="gift-code" id="gc2">XXXXX-XXXXX-XXXXX</div><div class="copy-hint">нажми чтобы скопировать</div><div class="copied-msg">✓ Скопировано!</div></div>
+  <div class="gift" style="cursor:default">
+    <div class="gift-label">🎮 ПОДАРОК</div>
+    <div class="gift-code" style="font-size:clamp(11px,3vw,14px);letter-spacing:1px;line-height:1.8">Загляни в свой Steam аккаунт.<br>Тебя там кое-что ждёт 😉</div>
+  </div>
   <div class="v-stats" id="vStats"></div>
 </div>
 
@@ -489,7 +484,7 @@
 // ══════════════════════════════════════════════
 //  VERSION & LOGGING
 // ══════════════════════════════════════════════
-const GAME_VERSION='2.4.0';
+const GAME_VERSION='2.5.0';
 const gameLog=[];
 function log(msg){
   const ts=new Date().toISOString().slice(11,19);
@@ -544,6 +539,44 @@ function sfxBoss(){
     g.gain.exponentialRampToValueAtTime(.001,actx.currentTime+2);
     o.connect(g);g.connect(actx.destination);o.start();o.stop(actx.currentTime+2);
   },700);
+}
+// Continuous boss battle music (looping)
+let bossMusInterval=null;
+function startBossMusic(){
+  if(!actx||muted)return;
+  stopBossMusic();
+  // Dark, pulsing battle loop — plays every 2.4s
+  const patterns=[
+    [110,131,110,165,110,131,110,98],   // dark minor riff
+    [131,110,98,110,131,165,131,110],    // variation
+    [82,98,110,82,98,131,110,82],        // low menacing
+  ];
+  let patIdx=0;
+  function playLoop(){
+    if(!actx||muted||!S.bossActive)return;
+    const pat=patterns[patIdx%patterns.length];
+    patIdx++;
+    // Melody notes
+    pat.forEach((f,i)=>setTimeout(()=>{
+      if(!S.bossActive)return;
+      tone(f,.25,'sawtooth',.04);
+    },i*280));
+    // Bass drum on beats 0 and 4
+    [0,4].forEach(i=>setTimeout(()=>{
+      if(!actx||!S.bossActive)return;
+      const o=actx.createOscillator(),g=actx.createGain();
+      o.type='sine';o.frequency.setValueAtTime(50,actx.currentTime);
+      o.frequency.exponentialRampToValueAtTime(25,actx.currentTime+.2);
+      g.gain.setValueAtTime(.1,actx.currentTime);
+      g.gain.exponentialRampToValueAtTime(.001,actx.currentTime+.25);
+      o.connect(g);g.connect(actx.destination);o.start();o.stop(actx.currentTime+.25);
+    },i*280));
+  }
+  playLoop();
+  bossMusInterval=setInterval(playLoop,2400);
+}
+function stopBossMusic(){
+  if(bossMusInterval){clearInterval(bossMusInterval);bossMusInterval=null;}
 }
 function sfxBossDefeat(){
   // Triumphant ascending fanfare — boss is dead!
@@ -1768,14 +1801,14 @@ function handleSwimClick(){
 function checkEvents(){
   const p=Math.floor(S.progress);
 
-  // Crash dialog at ~10%
-  if(p>=10&&!S.crashShown){
+  // Crash dialog at ~8%
+  if(p>=8&&!S.crashShown){
     S.crashShown=true;
     setTimeout(showFakeCrash,2000);
   }
 
-  // Dogs at ~20%
-  if(p>=20&&!S.dogShown){
+  // Dogs at ~18%
+  if(p>=18&&!S.dogShown){
     S.dogShown=true;
     setTimeout(spawnDog,3000);
   }
@@ -1786,38 +1819,38 @@ function checkEvents(){
     setTimeout(showTypingChallenge,2000);
   }
 
-  // Khachapuri at ~38%
-  if(p>=38&&!S.khachaShown){
+  // Khachapuri at ~40%
+  if(p>=40&&!S.khachaShown){
     S.khachaShown=true;
     setTimeout(showKhachapuri,2000);
   }
 
-  // Stack Overflow down at ~46%
-  if(p>=46&&!S.soDownShown){
+  // Stack Overflow down at ~52%
+  if(p>=52&&!S.soDownShown){
     S.soDownShown=true;
     setTimeout(showSODown,3000);
   }
 
-  // Marshrutka at ~55%
-  if(p>=55&&!S.marshrutkaShown){
+  // Marshrutka at ~62%
+  if(p>=62&&!S.marshrutkaShown){
     S.marshrutkaShown=true;
     setTimeout(spawnMarshrutka,2000);
   }
 
-  // Swimming (memory leak) at ~63%
-  if(p>=63&&!S.milestones[65]){
+  // Swimming (memory leak) at ~72%
+  if(p>=72&&!S.milestones[65]){
     S.milestones[65]=true;
     startSwimPhase();
   }
 
-  // Chacha at ~74%
-  if(p>=74&&!S.chachaShown){
+  // Chacha at ~83%
+  if(p>=83&&!S.chachaShown){
     S.chachaShown=true;
     setTimeout(showChachaPopup,2000);
   }
 
-  // Fog gate before boss at ~86%
-  if(p>=86&&!S.fogGateShown){
+  // Fog gate before boss at ~94%
+  if(p>=94&&!S.fogGateShown){
     S.fogGateShown=true;
     setTimeout(showFogGate,1500);
   }
@@ -2226,6 +2259,8 @@ function spawnGoldenCommit(){
 function spawnBossBug(){
   if(S.done)return;
   sfxBoss();
+  // Start looping battle music after the intro (~2s)
+  setTimeout(()=>startBossMusic(),2200);
   const b={
     x:cW*.3+Math.random()*cW*.3,
     y:cH*.15+Math.random()*cH*.2,
@@ -2299,7 +2334,9 @@ function showFlavor(text){
   document.querySelectorAll('.flavor').forEach(e=>e.remove());
   const el=document.createElement('div');
   el.className='flavor';el.textContent=text;
-  document.getElementById('gameArea').appendChild(el);
+  const game=document.getElementById('game');
+  const gameArea=document.getElementById('gameArea');
+  game.insertBefore(el,gameArea);
   setTimeout(()=>el.remove(),4500);
 }
 
@@ -2393,6 +2430,7 @@ function handleGameClick(e){
           const v=document.createElement('div');v.className='boss-victory';
           v.innerHTML='<h2>GREAT BUG FELLED</h2><p>Сегфолт повержен</p>';
           document.body.appendChild(v);setTimeout(()=>v.remove(),3500);
+          stopBossMusic();
           sfxBossDefeat();
           S.progress=Math.min(100,S.progress+5);updateHUD();
           screenFlash('rgba(255,215,0,.4)');
@@ -2596,16 +2634,6 @@ function winGame(){
       },i*40);
     }
 
-    // Gift copy-to-clipboard
-    document.querySelectorAll('.gift').forEach(g=>{
-      g.addEventListener('click',()=>{
-        const code=g.querySelector('.gift-code').textContent;
-        navigator.clipboard.writeText(code).then(()=>{
-          g.classList.add('copied');sfxTea();
-          setTimeout(()=>g.classList.remove('copied'),2000);
-        });
-      });
-    });
   },600);
 }
 
