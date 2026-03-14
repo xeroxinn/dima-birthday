@@ -36,7 +36,7 @@
     background-clip:text;margin-bottom:14px;line-height:1.8;
   }
   #intro .sub{
-    font-size:clamp(11px,3vw,14px);color:var(--dim);
+    font-size:clamp(11px,3vw,14px);color:rgba(200,200,230,.75);
     margin-bottom:28px;line-height:2;
   }
   .start-btn{
@@ -397,7 +397,7 @@
 
 <!-- INTRO -->
 <div id="intro">
-  <canvas id="introChar" width="80" height="96" style="image-rendering:pixelated;width:80px;height:96px;animation:introFloat 2s ease-in-out infinite"></canvas>
+  <canvas id="introChar" width="320" height="220" style="image-rendering:pixelated;width:min(85vw,320px);height:auto;margin-bottom:10px"></canvas>
   <h1>РАБОЧИЙ ДЕНЬ<br>ДИМЫ</h1>
   <div class="sub">
     Собери билд до 22:00<br><br>
@@ -407,7 +407,7 @@
     ⚠️ Жди сюрпризов...
   </div>
   <button class="start-btn" id="startBtn">► НАЧАТЬ ДЕНЬ</button>
-  <div style="font-size:6px;color:rgba(255,255,255,.15);margin-top:12px">v2.0.0</div>
+  <div style="font-size:6px;color:rgba(255,255,255,.15);margin-top:12px">v2.2.0</div>
 </div>
 
 <!-- GAME -->
@@ -456,7 +456,7 @@
 // ══════════════════════════════════════════════
 //  VERSION & LOGGING
 // ══════════════════════════════════════════════
-const GAME_VERSION='2.1.0';
+const GAME_VERSION='2.2.0';
 const gameLog=[];
 function log(msg){
   const ts=new Date().toISOString().slice(11,19);
@@ -698,10 +698,145 @@ function drawKhachapuri(ctx,ox,oy,s){
   px(ctx,ox+3,oy+1,s,'#fff');px(ctx,ox+3,oy+2,s,'#ffd700');
 }
 
-// Intro
+// Intro scene: Dima at desk with 3 monitors, tea, window with Tbilisi mountains
 function drawIntroChar(){
   const c=document.getElementById('introChar'),x=c.getContext('2d');
-  x.clearRect(0,0,80,96);drawDima(x,4,1,5,0,false);
+  x.clearRect(0,0,320,220);
+  x.imageSmoothingEnabled=false;
+  const s=4;
+  const p=(gx,gy,color)=>{x.fillStyle=color;x.fillRect(gx*s,gy*s,s,s)};
+
+  // Room background
+  x.fillStyle='#12112a';
+  x.fillRect(0,0,320,220);
+
+  // ── Window frame ──
+  const wL=6,wR=74,wT=2,wB=24;
+  x.fillStyle='#5a3a2a';
+  for(let wx=wL-1;wx<=wR+1;wx++){p(wx,wT-1,'#5a3a2a');p(wx,wB,'#5a3a2a');p(wx,wB+1,'#4a2a1a')}
+  for(let wy=wT-1;wy<=wB+1;wy++){p(wL-1,wy,'#5a3a2a');p(wR+1,wy,'#5a3a2a')}
+  p(Math.floor((wL+wR)/2),wT,'#5a3a2a');
+  for(let wy=wT;wy<=wB;wy++)p(Math.floor((wL+wR)/2),wy,'#4a2a1a');
+
+  // Sky gradient inside window
+  const skyG=x.createLinearGradient(0,wT*s,0,wB*s);
+  skyG.addColorStop(0,'#1a1a3e');skyG.addColorStop(0.3,'#3a2a5e');
+  skyG.addColorStop(0.6,'#ff8844');skyG.addColorStop(1,'#ffaa66');
+  x.fillStyle=skyG;
+  x.fillRect(wL*s,wT*s,(wR-wL)*s,(wB-wT)*s);
+
+  // Sun (right side of window)
+  x.fillStyle='rgba(255,220,80,.9)';
+  x.beginPath();x.arc(62*s,8*s,3*s,0,Math.PI*2);x.fill();
+  const gl=x.createRadialGradient(62*s,8*s,0,62*s,8*s,10*s);
+  gl.addColorStop(0,'rgba(255,200,50,.25)');gl.addColorStop(1,'rgba(255,200,50,0)');
+  x.fillStyle=gl;x.fillRect(wL*s,wT*s,(wR-wL)*s,(wB-wT)*s);
+
+  // Mountains
+  x.fillStyle='rgba(40,50,70,.85)';
+  x.beginPath();x.moveTo(wL*s,wB*s);
+  const mPeaks=[[8,18],[14,12],[20,16],[26,9],[32,15],[38,11],[45,14],[52,10],[58,16],[64,13],[70,17],[74,20]];
+  mPeaks.forEach(([mx,my])=>x.lineTo(mx*s,my*s));
+  x.lineTo(wR*s,wB*s);x.closePath();x.fill();
+
+  // Snow caps
+  x.fillStyle='rgba(255,255,255,.5)';
+  [[26,9],[52,10],[38,11]].forEach(([mx,my])=>{
+    x.beginPath();x.moveTo((mx-2)*s,(my+2)*s);x.lineTo(mx*s,my*s);x.lineTo((mx+2)*s,(my+2)*s);x.closePath();x.fill();
+  });
+
+  // Small Tbilisi buildings visible through window (foreground of mountains)
+  x.fillStyle='rgba(25,25,50,.7)';
+  [
+    [8,5],[10,7],[12,4],[15,6],[18,8],[20,5],[23,7],[26,4],[29,6],
+    [32,5],[35,8],[38,6],[41,4],[44,7],[47,5],[50,8],[53,6],[56,4],
+    [59,7],[62,5],[65,8],[68,6],[71,4]
+  ].forEach(([bx,bh])=>{
+    x.fillRect(bx*s,(wB-bh)*s,2*s,bh*s);
+    // Tiny windows
+    if(bh>5&&Math.random()>.4){x.fillStyle='rgba(255,200,80,.2)';x.fillRect((bx)*s,(wB-bh+1)*s,s,s);x.fillStyle='rgba(25,25,50,.7)'}
+  });
+
+  // Church dome (Tbilisi signature)
+  x.fillStyle='rgba(30,30,55,.8)';
+  x.beginPath();x.arc(45*s,(wB-6)*s,2*s,Math.PI,0);x.fill();
+  x.fillRect(43*s,(wB-6)*s,4*s,6*s);
+  x.fillRect(44.5*s,(wB-9)*s,s,3*s); // cross
+  x.fillRect(44*s,(wB-8)*s,2*s,s);
+
+  // ── Desk ──
+  for(let dx=10;dx<=69;dx++){p(dx,40,'#8b6914');p(dx,41,'#6b5010')}
+  for(let dy=42;dy<=48;dy++){p(12,dy,'#6b5010');p(67,dy,'#6b5010')}
+
+  // ── Keyboard on desk ──
+  for(let kx=32;kx<=47;kx++)p(kx,39,'#333');
+  for(let kx=33;kx<=46;kx++)p(kx,38,'#444');
+  // Key rows
+  for(let kx=34;kx<=45;kx+=2){p(kx,38,'#555')}
+
+  // ── Three monitors ──
+  // Left monitor
+  const lm={x:13,y:28,w:8,h:7};
+  x.fillStyle='#2a2a2a';x.fillRect(lm.x*s,lm.y*s,lm.w*s,lm.h*s);
+  x.fillStyle='#0a1628';x.fillRect((lm.x+1)*s,(lm.y+1)*s,(lm.w-2)*s,(lm.h-2)*s);
+  [['#00ff88',3],['#00d4ff',4],['#ffd32a',2],['#ff6b9d',5]].forEach(([c,l],i)=>{
+    x.fillStyle=c;x.fillRect((lm.x+2)*s,(lm.y+2+i)*s,Math.min(l,lm.w-3)*s,s);
+  });
+  p(lm.x+4,lm.y+lm.h,'#333');p(lm.x+3,lm.y+lm.h+1,'#444');p(lm.x+4,lm.y+lm.h+1,'#444');p(lm.x+5,lm.y+lm.h+1,'#444');
+
+  // Center monitor (main, bigger)
+  const cm={x:28,y:26,w:10,h:9};
+  x.fillStyle='#2a2a2a';x.fillRect(cm.x*s,cm.y*s,cm.w*s,cm.h*s);
+  x.fillStyle='#0a1628';x.fillRect((cm.x+1)*s,(cm.y+1)*s,(cm.w-2)*s,(cm.h-2)*s);
+  // Brighter code on main monitor
+  [['#00ff88',5],['#00d4ff',7],['#ffd32a',3],['#ff6b9d',6],['#a855f7',4],['#00ff88',5]].forEach(([c,l],i)=>{
+    x.fillStyle=c;x.fillRect((cm.x+2)*s,(cm.y+2+i)*s,Math.min(l,cm.w-3)*s,s);
+  });
+  // Monitor glow
+  const mg=x.createRadialGradient((cm.x+5)*s,(cm.y+4)*s,0,(cm.x+5)*s,(cm.y+4)*s,12*s);
+  mg.addColorStop(0,'rgba(0,212,255,.06)');mg.addColorStop(1,'rgba(0,212,255,0)');
+  x.fillStyle=mg;x.fillRect(20*s,26*s,30*s,20*s);
+  p(cm.x+5,cm.y+cm.h,'#333');p(cm.x+4,cm.y+cm.h+1,'#444');p(cm.x+5,cm.y+cm.h+1,'#444');p(cm.x+6,cm.y+cm.h+1,'#444');
+
+  // Right monitor
+  const rm={x:45,y:28,w:8,h:7};
+  x.fillStyle='#2a2a2a';x.fillRect(rm.x*s,rm.y*s,rm.w*s,rm.h*s);
+  x.fillStyle='#0a1628';x.fillRect((rm.x+1)*s,(rm.y+1)*s,(rm.w-2)*s,(rm.h-2)*s);
+  [['#ffd32a',4],['#00d4ff',3],['#00ff88',5],['#ff6b9d',2]].forEach(([c,l],i)=>{
+    x.fillStyle=c;x.fillRect((rm.x+2)*s,(rm.y+2+i)*s,Math.min(l,rm.w-3)*s,s);
+  });
+  p(rm.x+4,rm.y+rm.h,'#333');p(rm.x+3,rm.y+rm.h+1,'#444');p(rm.x+4,rm.y+rm.h+1,'#444');p(rm.x+5,rm.y+rm.h+1,'#444');
+
+  // ── Dima (seated, upper body only) ──
+  const dx=36,dy=31;
+  // Hair
+  for(let hx=1;hx<=5;hx++)p(dx+hx,dy,P.hair);
+  for(let hx=0;hx<=6;hx++)p(dx+hx,dy+1,P.hair);
+  // Face
+  for(let fx=1;fx<=5;fx++){p(dx+fx,dy+2,P.skin);p(dx+fx,dy+3,P.skin)}
+  p(dx+2,dy+2,'#333');p(dx+4,dy+2,'#333'); // eyes
+  p(dx+3,dy+3,'#c97'); // nose
+  // Body (blue shirt)
+  for(let by=4;by<=7;by++)for(let bx=1;bx<=5;bx++)p(dx+bx,dy+by,P.shirt);
+  // Arms reaching to keyboard
+  p(dx,dy+5,P.skin);p(dx+6,dy+5,P.skin);
+  p(dx-1,dy+6,P.skin);p(dx+7,dy+6,P.skin);
+  p(dx-2,dy+7,P.skin);p(dx+8,dy+7,P.skin);
+
+  // ── Tea cup on desk (left side) ──
+  for(let ty=0;ty<=2;ty++)for(let tx=0;tx<=3;tx++)p(56+tx,37+ty,'#4a9960');
+  p(57,37,'#88cc44');p(58,37,'#88cc44');p(57,38,'#88cc44');p(58,38,'#88cc44');
+  p(60,37,'#4a9960');p(60,38,'#4a9960'); // handle
+  // Steam
+  x.fillStyle='rgba(255,255,255,.25)';
+  x.fillRect(57*s,35*s,s,s);x.fillRect(58*s,34*s,s,s);x.fillRect(56*s,33*s,s,s);
+
+  // ── Ambient glow from monitors ──
+  x.fillStyle='rgba(0,100,200,.03)';
+  x.fillRect(0,28*s,320,15*s);
+
+  // ── Small details: mouse on desk ──
+  p(50,39,'#555');p(51,39,'#555');p(50,38,'#666');
 }
 
 // ══════════════════════════════════════════════
@@ -767,7 +902,7 @@ function setupCanvas(){
   canvas.style.width=cW+'px';canvas.style.height=cH+'px';
   ctx=canvas.getContext('2d');ctx.scale(d,d);
   ctx.imageSmoothingEnabled=false;
-  ps=Math.max(5,Math.floor(cW/70));
+  ps=Math.max(7,Math.floor(cW/50));
 }
 
 // ══════════════════════════════════════════════
@@ -813,16 +948,24 @@ function initBackgroundElements(){
 
 // Window view: mountains + sun + Tbilisi skyline
 function drawWindowView(tc){
-  const winL=cW*.05,winR=cW*.95,winT=cH*.02,winB=cH*.38;
+  const winL=cW*.04,winR=cW*.96,winT=cH*.01,winB=cH*.42;
   const winW=winR-winL,winH=winB-winT;
+  const fr=5; // frame thickness
 
-  // Window frame
-  ctx.fillStyle='rgba(80,60,40,.6)';
-  ctx.fillRect(winL-3,winT-3,winW+6,3); // top
-  ctx.fillRect(winL-3,winB,winW+6,3); // bottom
-  ctx.fillRect(winL-3,winT,3,winH+3); // left
-  ctx.fillRect(winR,winT,3,winH+3); // right
-  ctx.fillRect(winL+winW/2-1,winT,2,winH); // center divider
+  // Window frame (thick wooden frame)
+  ctx.fillStyle='rgba(90,60,35,.85)';
+  ctx.fillRect(winL-fr,winT-fr,winW+fr*2,fr); // top
+  ctx.fillRect(winL-fr,winB,winW+fr*2,fr); // bottom
+  ctx.fillRect(winL-fr,winT,fr,winH); // left
+  ctx.fillRect(winR,winT,fr,winH); // right
+  // Inner shadow on frame
+  ctx.fillStyle='rgba(50,30,15,.5)';
+  ctx.fillRect(winL,winT,winW,2);ctx.fillRect(winL,winT,2,winH);
+  // Center divider
+  ctx.fillStyle='rgba(70,45,25,.8)';
+  ctx.fillRect(winL+winW/2-2,winT,4,winH);
+  // Horizontal divider
+  ctx.fillRect(winL,winT+winH*.45,winW,3);
 
   // Sky inside window (lighter than room)
   const skyGrad=ctx.createLinearGradient(0,winT,0,winB);
@@ -832,75 +975,89 @@ function drawWindowView(tc){
   ctx.fillRect(winL,winT,winW,winH);
 
   // Sun/Moon position based on time
-  const timeN=(S.gameTime-360)/(1320-360); // 0=6am, 1=10pm
+  const timeN=(S.gameTime-360)/(1320-360);
   const sunX=winL+timeN*winW;
-  // Arc: sunrise left, peak center, sunset right
   const sunArc=Math.sin(timeN*Math.PI);
   const sunY=winB-sunArc*winH*.8;
 
   if(timeN<.75){
-    // Sun
-    const sunR=8+sunArc*6;
+    const sunR=10+sunArc*8;
     const sunAlpha=timeN<.1?.5+timeN*5:timeN>.7?.5+((.75-timeN)/.05)*0:1;
-    // Glow
     const glow=ctx.createRadialGradient(sunX,sunY,0,sunX,sunY,sunR*4);
     glow.addColorStop(0,`rgba(255,200,50,${.15*sunAlpha})`);
     glow.addColorStop(1,'rgba(255,200,50,0)');
     ctx.fillStyle=glow;
     ctx.fillRect(winL,winT,winW,winH);
-    // Sun body
     ctx.fillStyle=`rgba(255,220,80,${sunAlpha})`;
     ctx.beginPath();ctx.arc(sunX,sunY,sunR,0,Math.PI*2);ctx.fill();
   } else {
-    // Moon
     ctx.fillStyle='rgba(200,210,255,.6)';
-    ctx.beginPath();ctx.arc(winL+winW*.7,winT+winH*.3,6,0,Math.PI*2);ctx.fill();
+    ctx.beginPath();ctx.arc(winL+winW*.7,winT+winH*.25,8,0,Math.PI*2);ctx.fill();
   }
 
-  // Georgian mountains
+  // Georgian mountains (bigger)
   ctx.fillStyle=tc.star>.3?'rgba(30,40,60,.8)':'rgba(60,80,100,.5)';
-  ctx.beginPath();
-  ctx.moveTo(winL,winB);
-  const peaks=[.1,.25,.18,.4,.55,.35,.65,.8,.7,.9,1];
-  const heights=[.3,.6,.4,.8,.5,.7,.45,.6,.35,.5,.3];
-  peaks.forEach((px_,i)=>{
-    ctx.lineTo(winL+px_*winW,winB-heights[i]*winH*.6);
-  });
+  ctx.beginPath();ctx.moveTo(winL,winB);
+  const peaks=[.08,.15,.22,.3,.4,.5,.55,.65,.72,.82,.92,1];
+  const heights=[.25,.55,.35,.8,.45,.7,.5,.85,.4,.6,.3,.2];
+  peaks.forEach((px_,i)=>{ctx.lineTo(winL+px_*winW,winB-heights[i]*winH*.55)});
   ctx.lineTo(winR,winB);ctx.closePath();ctx.fill();
 
-  // Snow caps
-  ctx.fillStyle='rgba(255,255,255,.3)';
+  // Snow caps on tallest peaks
+  ctx.fillStyle='rgba(255,255,255,.35)';
   peaks.forEach((px_,i)=>{
-    if(heights[i]>.5){
-      const mx=winL+px_*winW;
-      const my=winB-heights[i]*winH*.6;
-      ctx.beginPath();
-      ctx.moveTo(mx-8,my+6);ctx.lineTo(mx,my);ctx.lineTo(mx+8,my+6);
-      ctx.closePath();ctx.fill();
+    if(heights[i]>.55){
+      const mx=winL+px_*winW,my=winB-heights[i]*winH*.55;
+      ctx.beginPath();ctx.moveTo(mx-10,my+8);ctx.lineTo(mx,my);ctx.lineTo(mx+10,my+8);ctx.closePath();ctx.fill();
     }
   });
 
-  // Window clouds (small, drifting through window)
+  // Tbilisi buildings in front of mountains (through window)
+  ctx.fillStyle=tc.star>.3?'rgba(18,18,40,.75)':'rgba(35,35,60,.45)';
+  const wBuildings=[4,7,5,10,6,3,8,12,5,9,7,4,11,6,8,3,7,5,9,6,4,8,10,5];
+  const bbw=winW/wBuildings.length;
+  wBuildings.forEach((h,i)=>{
+    const bh=h*winH*.03;
+    ctx.fillRect(winL+i*bbw,winB-bh,bbw-1,bh);
+    // Lit windows at night
+    if(tc.star>.3&&h>6){
+      for(let wy=1;wy<Math.floor(h/3);wy++){
+        if(Math.sin(i*11+wy*7)>.1){
+          ctx.fillStyle='rgba(255,200,80,.2)';
+          ctx.fillRect(winL+i*bbw+2,winB-bh+wy*4+2,2,2);
+          ctx.fillStyle=tc.star>.3?'rgba(18,18,40,.75)':'rgba(35,35,60,.45)';
+        }
+      }
+    }
+  });
+
+  // Church dome
+  const cx_=winL+winW*.55,cy_=winB-10*winH*.03;
+  ctx.fillStyle=tc.star>.3?'rgba(20,20,40,.7)':'rgba(35,35,55,.5)';
+  ctx.beginPath();ctx.arc(cx_,cy_,winH*.04,Math.PI,0);ctx.fill();
+  ctx.fillRect(cx_-winH*.04,cy_,winH*.08,winH*.08);
+  ctx.fillRect(cx_-1,cy_-winH*.05,2,winH*.05);
+  ctx.fillRect(cx_-winH*.015,cy_-winH*.04,winH*.03,2);
+
+  // Clouds
   for(let i=0;i<3;i++){
-    const wcx=winL+((S.frame*.3+i*winW*.4)%(winW+60))-30;
-    const wcy=winT+winH*(.15+i*.2);
+    const wcx=winL+((S.frame*.3+i*winW*.35)%(winW+80))-40;
+    const wcy=winT+winH*(.12+i*.18);
     const wa=.12-tc.star*.05;
     if(wa>.02){
       ctx.fillStyle=`rgba(255,255,255,${wa})`;
-      ctx.beginPath();ctx.ellipse(wcx,wcy,15+i*5,5+i*2,0,0,Math.PI*2);ctx.fill();
+      ctx.beginPath();ctx.ellipse(wcx,wcy,18+i*6,6+i*2,0,0,Math.PI*2);ctx.fill();
     }
   }
 
-  // Birds during daytime (small V shapes)
+  // Birds during daytime
   const timeN2=(S.gameTime-360)/(1320-360);
   if(timeN2>.15&&timeN2<.7){
-    for(let i=0;i<2;i++){
-      const bx=winL+((S.frame*.5+i*150)%(winW+40))-20;
-      const by=winT+winH*(.2+i*.15)+Math.sin(S.frame*.03+i)*3;
-      ctx.strokeStyle='rgba(50,50,80,.3)';ctx.lineWidth=1;
-      ctx.beginPath();
-      ctx.moveTo(bx-4,by+2);ctx.lineTo(bx,by);ctx.lineTo(bx+4,by+2);
-      ctx.stroke();
+    for(let i=0;i<3;i++){
+      const bx=winL+((S.frame*.5+i*130)%(winW+40))-20;
+      const by=winT+winH*(.15+i*.12)+Math.sin(S.frame*.03+i)*3;
+      ctx.strokeStyle='rgba(50,50,80,.35)';ctx.lineWidth=1;
+      ctx.beginPath();ctx.moveTo(bx-5,by+3);ctx.lineTo(bx,by);ctx.lineTo(bx+5,by+3);ctx.stroke();
     }
   }
 }
@@ -921,12 +1078,11 @@ function drawRoomLight(tc){
 // Tbilisi skyline (visible through window)
 function drawSkyline(tc){
   const baseY=cH;
-  const alpha=tc.star>.3?.5:.2;
-  ctx.fillStyle=tc.star>.3?'rgba(15,15,30,.5)':'rgba(30,30,50,.2)';
-  const SKYLINE=[3,5,4,8,6,3,10,7,4,5,12,8,5,3,6,9,4,7,5,3];
+  ctx.fillStyle=tc.star>.3?'rgba(15,15,30,.6)':'rgba(30,30,50,.25)';
+  const SKYLINE=[5,8,6,12,9,5,14,10,6,8,16,12,7,5,9,13,6,10,8,5];
   const bw=Math.ceil(cW/SKYLINE.length);
   SKYLINE.forEach((h,i)=>{
-    const bh=h*ps*.6;
+    const bh=h*ps*1.2;
     ctx.fillRect(i*bw,baseY-bh,bw-1,bh);
     // Windows that glow at night
     if(tc.star>.3&&h>5){
@@ -940,14 +1096,14 @@ function drawSkyline(tc){
     }
   });
   // Church dome (Tbilisi vibe — position at 60%)
-  const cx=cW*.6,cy=baseY-12*ps*.6;
-  ctx.fillStyle=tc.star>.3?'rgba(20,20,40,.6)':'rgba(40,40,60,.25)';
+  const cx=cW*.6,cy=baseY-16*ps*1.2;
+  ctx.fillStyle=tc.star>.3?'rgba(20,20,40,.65)':'rgba(40,40,60,.3)';
   ctx.beginPath();
-  ctx.arc(cx,cy,ps*2.5,Math.PI,0);ctx.fill();
-  ctx.fillRect(cx-ps*2.5,cy,ps*5,ps*4);
+  ctx.arc(cx,cy,ps*3.5,Math.PI,0);ctx.fill();
+  ctx.fillRect(cx-ps*3.5,cy,ps*7,ps*6);
   // Cross on top
-  ctx.fillRect(cx-1,cy-ps*2,2,ps*2);
-  ctx.fillRect(cx-ps*.8,cy-ps*1.5,ps*1.6,2);
+  ctx.fillRect(cx-1,cy-ps*3,3,ps*3);
+  ctx.fillRect(cx-ps*1.2,cy-ps*2.5,ps*2.4,3);
 }
 
 function gameLoop(){
@@ -1056,7 +1212,7 @@ function renderNormalPhase(){
     showFlavor("Чайный перегруз прошёл... 😴");
   }
   const dimaX=Math.floor(cW/2/ps)-3;
-  const dimaY=Math.floor(cH*.55/ps);
+  const dimaY=Math.floor(cH*.58/ps);
 
   // Desk
   drawDesk(ctx,dimaX-4,dimaY+9,ps);
