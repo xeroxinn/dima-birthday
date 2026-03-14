@@ -30,18 +30,18 @@
   }
   #introChar{image-rendering:pixelated;margin-bottom:20px;}
   #intro h1{
-    font-size:clamp(14px,4vw,22px);
+    font-size:clamp(20px,6vw,28px);
     background:linear-gradient(90deg,var(--accent),var(--purple),var(--pink));
     -webkit-background-clip:text;-webkit-text-fill-color:transparent;
     background-clip:text;margin-bottom:14px;line-height:1.8;
   }
   #intro .sub{
-    font-size:clamp(7px,2vw,10px);color:var(--dim);
+    font-size:clamp(11px,3vw,14px);color:var(--dim);
     margin-bottom:28px;line-height:2;
   }
   .start-btn{
-    font-family:'Press Start 2P',monospace;font-size:clamp(10px,3vw,14px);
-    padding:16px 40px;background:linear-gradient(135deg,var(--accent),var(--purple));
+    font-family:'Press Start 2P',monospace;font-size:clamp(14px,4vw,18px);
+    padding:18px 44px;background:linear-gradient(135deg,var(--accent),var(--purple));
     color:#fff;border:none;cursor:pointer;position:relative;overflow:hidden;
   }
   .start-btn:active{transform:scale(.95)}
@@ -73,14 +73,14 @@
     padding:8px 10px;background:var(--panel);
     border-bottom:2px solid var(--dim);flex-shrink:0;z-index:10;
   }
-  .clock{font-size:clamp(7px,2vw,10px);color:var(--yellow)}
-  .stats{display:flex;gap:8px;font-size:clamp(6px,1.6vw,8px)}
+  .clock{font-size:clamp(11px,3vw,14px);color:var(--yellow)}
+  .stats{display:flex;gap:8px;font-size:clamp(10px,2.5vw,12px)}
   .stat{display:flex;align-items:center;gap:2px;padding:2px 5px;background:rgba(255,255,255,.05);border-radius:2px}
 
   /* Progress */
   .prog-wrap{padding:6px 10px;background:var(--panel);flex-shrink:0;z-index:10}
-  .prog-head{display:flex;justify-content:space-between;font-size:clamp(6px,1.5vw,7px);color:var(--dim);margin-bottom:3px}
-  .prog-outer{width:100%;height:14px;background:var(--surface);border:1px solid var(--dim);overflow:hidden;position:relative}
+  .prog-head{display:flex;justify-content:space-between;font-size:clamp(9px,2.2vw,11px);color:var(--dim);margin-bottom:3px}
+  .prog-outer{width:100%;height:20px;background:var(--surface);border:1px solid var(--dim);overflow:hidden;position:relative}
   .prog-inner{height:100%;width:0%;background:linear-gradient(90deg,var(--green),var(--accent));transition:width .3s}
   .prog-inner::after{content:'';position:absolute;right:0;top:0;bottom:0;width:20px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.3))}
   .milestone-mark{position:absolute;top:0;bottom:0;width:2px;background:var(--yellow);opacity:.4}
@@ -91,7 +91,7 @@
 
   /* Overlays */
   .combo{
-    position:absolute;top:8px;right:8px;font-size:clamp(9px,2.5vw,14px);
+    position:absolute;top:8px;right:8px;font-size:clamp(14px,4vw,18px);
     color:var(--orange);text-shadow:0 0 8px var(--orange);
     opacity:0;transition:opacity .3s;z-index:15;pointer-events:none;
   }
@@ -99,22 +99,22 @@
 
   .float-text{
     position:absolute;pointer-events:none;
-    font-family:'Press Start 2P',monospace;font-size:clamp(8px,2.2vw,11px);
+    font-family:'Press Start 2P',monospace;font-size:clamp(12px,3.5vw,16px);
     animation:floatUp .9s ease-out forwards;z-index:12;text-shadow:0 0 6px currentColor;
   }
   @keyframes floatUp{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-60px) scale(.8)}}
 
   .flavor{
     position:absolute;bottom:10px;left:50%;transform:translateX(-50%);
-    font-size:clamp(6px,1.5vw,8px);color:var(--yellow);text-align:center;
-    max-width:85%;padding:6px 12px;background:rgba(0,0,0,.85);
+    font-size:clamp(10px,2.8vw,13px);color:var(--yellow);text-align:center;
+    max-width:90%;padding:8px 14px;background:rgba(0,0,0,.85);
     border:1px solid var(--yellow);z-index:15;pointer-events:none;
     animation:flavorShow 4s ease-in-out forwards;line-height:1.8;
   }
   @keyframes flavorShow{0%{opacity:0;transform:translateX(-50%) translateY(10px)}10%{opacity:1;transform:translateX(-50%) translateY(0)}80%{opacity:1}100%{opacity:0}}
 
   .boost-ind{
-    position:absolute;top:8px;left:8px;font-size:clamp(7px,1.8vw,9px);
+    position:absolute;top:8px;left:8px;font-size:clamp(11px,3vw,14px);
     color:var(--yellow);background:rgba(0,0,0,.7);padding:3px 7px;
     z-index:15;pointer-events:none;display:none;
   }
@@ -146,14 +146,14 @@
     text-shadow:0 0 30px var(--red),0 0 60px rgba(255,71,87,.5);
     animation:diedText .8s ease-out;
   }
-  .you-died p{margin-top:14px;font-size:clamp(7px,2vw,10px);color:var(--dim)}
+  .you-died p{margin-top:14px;font-size:clamp(10px,3vw,13px);color:var(--dim)}
   @keyframes diedOverlay{0%{opacity:0}10%{opacity:1}75%{opacity:1}100%{opacity:0}}
   @keyframes diedText{0%{transform:scale(.3);opacity:0}60%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
 
   /* Milestone popup */
   .milestone-popup{
     position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
-    font-size:clamp(9px,2.5vw,14px);color:var(--yellow);text-align:center;
+    font-size:clamp(13px,3.5vw,16px);color:var(--yellow);text-align:center;
     line-height:2;z-index:30;pointer-events:none;
     animation:milestonePop 2.5s ease-out forwards;
     text-shadow:0 0 15px var(--yellow);
@@ -196,12 +196,12 @@
     padding:20px;z-index:55;text-align:center;
     width:min(85%,300px);pointer-events:auto;
   }
-  .chacha-popup h3{font-size:clamp(10px,3vw,14px);color:var(--purple);margin-bottom:12px;line-height:1.6}
-  .chacha-popup p{font-size:clamp(7px,2vw,9px);color:var(--dim);margin-bottom:16px;line-height:1.8}
+  .chacha-popup h3{font-size:clamp(14px,4vw,18px);color:var(--purple);margin-bottom:12px;line-height:1.6}
+  .chacha-popup p{font-size:clamp(10px,3vw,13px);color:var(--dim);margin-bottom:16px;line-height:1.8}
   .chacha-btns{display:flex;gap:10px;justify-content:center}
   .chacha-btns button{
-    font-family:'Press Start 2P',monospace;font-size:clamp(7px,2vw,9px);
-    padding:10px 16px;border:none;cursor:pointer;
+    font-family:'Press Start 2P',monospace;font-size:clamp(11px,3vw,13px);
+    padding:12px 18px;border:none;cursor:pointer;
   }
   .chacha-yes{background:var(--purple);color:#fff}
   .chacha-no{background:var(--surface);color:var(--text);border:1px solid var(--dim) !important}
@@ -225,12 +225,12 @@
     padding:20px;z-index:55;text-align:center;
     width:min(85%,300px);pointer-events:auto;
   }
-  .khacha-popup h3{font-size:clamp(10px,3vw,14px);color:var(--orange);margin-bottom:10px;line-height:1.6}
-  .khacha-popup p{font-size:clamp(7px,2vw,9px);color:var(--dim);margin-bottom:14px;line-height:1.8}
+  .khacha-popup h3{font-size:clamp(14px,4vw,18px);color:var(--orange);margin-bottom:10px;line-height:1.6}
+  .khacha-popup p{font-size:clamp(10px,3vw,13px);color:var(--dim);margin-bottom:14px;line-height:1.8}
   .khacha-btns{display:flex;gap:10px;justify-content:center}
   .khacha-btns button{
-    font-family:'Press Start 2P',monospace;font-size:clamp(7px,2vw,9px);
-    padding:10px 14px;border:none;cursor:pointer;
+    font-family:'Press Start 2P',monospace;font-size:clamp(11px,3vw,13px);
+    padding:12px 16px;border:none;cursor:pointer;
   }
   .khacha-yes{background:var(--orange);color:#fff}
   .khacha-no{background:var(--surface);color:var(--text);border:1px solid var(--dim) !important}
@@ -243,7 +243,7 @@
   }
   .swim-hud{
     position:absolute;top:8px;left:50%;transform:translateX(-50%);
-    font-size:clamp(8px,2.2vw,11px);color:#fff;
+    font-size:clamp(12px,3.5vw,15px);color:#fff;
     text-shadow:0 0 8px var(--accent);z-index:26;pointer-events:none;
   }
 
@@ -258,26 +258,26 @@
   .v-icon{font-size:clamp(48px,15vw,72px);margin-bottom:12px;animation:vBounce 1s ease-in-out infinite}
   @keyframes vBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
   #victory h1{
-    font-size:clamp(10px,3vw,16px);
+    font-size:clamp(16px,5vw,22px);
     background:linear-gradient(90deg,var(--green),var(--accent));
     -webkit-background-clip:text;-webkit-text-fill-color:transparent;
     background-clip:text;margin-bottom:4px;line-height:1.8;
   }
-  #victory .bnote{font-size:clamp(6px,1.8vw,9px);color:var(--dim);margin-bottom:22px}
+  #victory .bnote{font-size:clamp(10px,2.8vw,13px);color:var(--dim);margin-bottom:22px}
   #victory .bday{
-    font-size:clamp(13px,3.5vw,20px);color:var(--yellow);margin-bottom:6px;
+    font-size:clamp(18px,5.5vw,26px);color:var(--yellow);margin-bottom:6px;
     text-shadow:0 0 12px var(--yellow);line-height:1.6;
   }
-  #victory .bday-sub{font-size:clamp(7px,2vw,11px);color:var(--text);margin-bottom:24px;line-height:1.8}
+  #victory .bday-sub{font-size:clamp(12px,3.5vw,15px);color:var(--text);margin-bottom:24px;line-height:1.8}
   .gift{
     background:var(--panel);border:2px solid var(--accent);
     padding:12px 18px;margin:5px 0;width:min(92%,360px);
     position:relative;overflow:hidden;
   }
   .gift::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,212,255,.05),transparent)}
-  .gift-label{font-size:clamp(6px,1.5vw,7px);color:var(--accent);margin-bottom:5px}
-  .gift-code{font-size:clamp(8px,2.2vw,12px);color:#fff;letter-spacing:2px;word-break:break-all}
-  .v-stats{margin-top:18px;font-size:clamp(6px,1.5vw,7px);color:var(--dim);line-height:2.2}
+  .gift-label{font-size:clamp(9px,2.5vw,11px);color:var(--accent);margin-bottom:5px}
+  .gift-code{font-size:clamp(12px,3.5vw,15px);color:#fff;letter-spacing:2px;word-break:break-all}
+  .v-stats{margin-top:18px;font-size:clamp(9px,2.5vw,11px);color:var(--dim);line-height:2.2}
 
   /* Confetti */
   .confetti{position:fixed;z-index:199;pointer-events:none;animation:confDrop linear forwards}
@@ -287,7 +287,7 @@
   .caffeine{animation:cafJit .1s infinite;box-shadow:inset 0 0 60px rgba(0,255,136,.15)}
   @keyframes cafJit{0%{transform:translate(0)}25%{transform:translate(1px,-1px)}50%{transform:translate(-1px,1px)}75%{transform:translate(1px,1px)}100%{transform:translate(-1px,-1px)}}
   .caffeine-ind{
-    position:absolute;top:28px;left:8px;font-size:clamp(7px,1.8vw,9px);
+    position:absolute;top:32px;left:8px;font-size:clamp(11px,3vw,14px);
     color:var(--green);background:rgba(0,0,0,.7);padding:3px 7px;
     z-index:15;pointer-events:none;display:none;
   }
@@ -299,15 +299,15 @@
     display:flex;flex-direction:column;align-items:center;justify-content:center;
     z-index:45;text-align:center;pointer-events:none;
   }
-  .so-down h2{font-size:clamp(12px,4vw,20px);color:var(--red);margin-bottom:12px;line-height:1.6}
-  .so-down p{font-size:clamp(7px,2vw,10px);color:var(--dim);line-height:1.8}
+  .so-down h2{font-size:clamp(16px,5vw,24px);color:var(--red);margin-bottom:12px;line-height:1.6}
+  .so-down p{font-size:clamp(10px,3vw,13px);color:var(--dim);line-height:1.8}
 
   /* Gift copy */
   .gift{cursor:pointer;transition:border-color .3s,box-shadow .3s}
   .gift:hover{border-color:var(--green);box-shadow:0 0 12px rgba(0,255,136,.3)}
   .gift.copied{border-color:var(--green)}
-  .gift .copy-hint{font-size:clamp(5px,1.2vw,6px);color:var(--dim);margin-top:4px}
-  .gift .copied-msg{font-size:clamp(6px,1.5vw,8px);color:var(--green);margin-top:4px;display:none}
+  .gift .copy-hint{font-size:clamp(8px,2.2vw,10px);color:var(--dim);margin-top:4px}
+  .gift .copied-msg{font-size:clamp(9px,2.5vw,11px);color:var(--green);margin-top:4px;display:none}
   .gift.copied .copy-hint{display:none}
   .gift.copied .copied-msg{display:block}
 
@@ -317,14 +317,14 @@
     display:flex;flex-direction:column;align-items:center;justify-content:center;
     z-index:55;text-align:center;pointer-events:auto;padding:20px;
   }
-  .typing-overlay h3{font-size:clamp(10px,3vw,14px);color:var(--accent);margin-bottom:14px;line-height:1.6}
+  .typing-overlay h3{font-size:clamp(14px,4vw,18px);color:var(--accent);margin-bottom:14px;line-height:1.6}
   .typing-overlay .code-line{
-    font-family:'Press Start 2P',monospace;font-size:clamp(9px,2.5vw,13px);
+    font-family:'Press Start 2P',monospace;font-size:clamp(12px,3.5vw,15px);
     color:var(--green);margin-bottom:18px;letter-spacing:2px;line-height:2;
     padding:10px 16px;background:rgba(0,255,136,.05);border:1px solid var(--green);
   }
   .typing-overlay .input-line{
-    font-family:'Press Start 2P',monospace;font-size:clamp(9px,2.5vw,13px);
+    font-family:'Press Start 2P',monospace;font-size:clamp(12px,3.5vw,15px);
     color:var(--text);letter-spacing:2px;min-height:1.5em;
   }
   .typing-overlay .input-line .correct{color:var(--green)}
@@ -342,10 +342,10 @@
   }
   @keyframes fogPulse{0%,100%{opacity:.9}50%{opacity:1}}
   .fog-gate h2{
-    font-size:clamp(12px,4vw,20px);color:rgba(255,255,255,.7);
+    font-size:clamp(16px,5vw,24px);color:rgba(255,255,255,.7);
     text-shadow:0 0 20px rgba(255,255,255,.3);margin-bottom:12px;
   }
-  .fog-gate p{font-size:clamp(7px,2vw,10px);color:rgba(255,255,255,.4);animation:blink 2s ease-in-out infinite}
+  .fog-gate p{font-size:clamp(11px,3vw,14px);color:rgba(255,255,255,.4);animation:blink 2s ease-in-out infinite}
   @keyframes blink{0%,100%{opacity:.3}50%{opacity:1}}
 
   /* Golden commit */
@@ -363,7 +363,7 @@
     background:rgba(0,0,0,.7);animation:bossPhaseFlash 1.5s ease-out forwards;
   }
   .boss-phase h2{
-    font-size:clamp(14px,5vw,24px);color:var(--red);
+    font-size:clamp(18px,6vw,28px);color:var(--red);
     text-shadow:0 0 30px var(--red);animation:diedText .8s ease-out;
   }
   @keyframes bossPhaseFlash{0%{opacity:0}20%{opacity:1}80%{opacity:1}100%{opacity:0}}
@@ -375,11 +375,11 @@
     background:rgba(0,0,0,.85);animation:diedOverlay 3.5s ease-in-out forwards;
   }
   .boss-victory h2{
-    font-size:clamp(18px,7vw,40px);color:var(--yellow);
+    font-size:clamp(22px,8vw,44px);color:var(--yellow);
     text-shadow:0 0 30px var(--yellow),0 0 60px rgba(255,215,42,.5);
     animation:diedText .8s ease-out;
   }
-  .boss-victory p{margin-top:10px;font-size:clamp(7px,2vw,10px);color:var(--dim)}
+  .boss-victory p{margin-top:10px;font-size:clamp(11px,3vw,14px);color:var(--dim)}
 
   /* Mute */
   .mute-btn{
@@ -456,7 +456,7 @@
 // ══════════════════════════════════════════════
 //  VERSION & LOGGING
 // ══════════════════════════════════════════════
-const GAME_VERSION='2.0.0';
+const GAME_VERSION='2.1.0';
 const gameLog=[];
 function log(msg){
   const ts=new Date().toISOString().slice(11,19);
@@ -472,7 +472,7 @@ log(`Game loaded — v${GAME_VERSION}`);
 const AC=window.AudioContext||window.webkitAudioContext;
 let actx=null,muted=false;
 function initAudio(){if(actx)return;actx=new AC();document.getElementById('muteBtn').style.display='flex'}
-function tone(f,d,t='square',v=.07){
+function tone(f,d,t='square',v=.07){v=Math.min(v*4,1);
   if(!actx||muted)return;
   const o=actx.createOscillator(),g=actx.createGain();
   o.type=t;o.frequency.setValueAtTime(f,actx.currentTime);
@@ -767,7 +767,7 @@ function setupCanvas(){
   canvas.style.width=cW+'px';canvas.style.height=cH+'px';
   ctx=canvas.getContext('2d');ctx.scale(d,d);
   ctx.imageSmoothingEnabled=false;
-  ps=Math.max(3,Math.floor(cW/100));
+  ps=Math.max(5,Math.floor(cW/70));
 }
 
 // ══════════════════════════════════════════════
@@ -1129,7 +1129,7 @@ function renderNormalPhase(){
       const phaseColors=['#ff0000','#ff6600','#ff00ff'];
       ctx.fillStyle='#333';ctx.fillRect(b.x-10,b.y-12,bw,6);
       ctx.fillStyle=phaseColors[phase-1];ctx.fillRect(b.x-10,b.y-12,bw*(b.hp/b.maxHP),6);
-      ctx.fillStyle='#fff';ctx.font='6px "Press Start 2P"';
+      ctx.fillStyle='#fff';ctx.font=`${Math.max(9,ps*2)}px "Press Start 2P"`;
       const bossNames=['БОСС-БАГ','БОСС-БАГ [ЯРОСТЬ]','БОСС-БАГ [ХАОС]'];
       ctx.fillText(bossNames[phase-1],b.x-8,b.y-16);
     }
@@ -1325,7 +1325,7 @@ function renderSwimPhase(){
 
   // Score display
   ctx.fillStyle='#fff';
-  ctx.font=`${Math.max(16,cW*.05)}px "Press Start 2P"`;
+  ctx.font=`${Math.max(20,cW*.07)}px "Press Start 2P"`;
   ctx.textAlign='center';
   ctx.fillText(S.swimScore.toString(),cW/2,cH*.12);
   ctx.textAlign='left';
@@ -1631,7 +1631,7 @@ function showTypingChallenge(){
   d.className='typing-overlay';d.id='typingOv';
   d.innerHTML=`
     <h3>⌨️ КОД-РЕВЬЮ!</h3>
-    <p style="font-size:clamp(6px,1.5vw,8px);color:var(--dim);margin-bottom:8px">Перепиши код точно как показано:</p>
+    <p style="font-size:clamp(10px,2.8vw,13px);color:var(--dim);margin-bottom:8px">Перепиши код точно как показано:</p>
     <div class="code-line">${snippet}</div>
     <div class="input-line" id="typingInput">_</div>
     <div class="timer-bar"><div class="timer-fill" id="typingTimer" style="width:100%"></div></div>
