@@ -904,7 +904,7 @@ const ents={bugs:[],teas:[],particles:[],wife:null,dogs:[],marshrutka:null};
 // ══════════════════════════════════════════════
 const FL=[
   "Дима проснулся в 5:47. Будильник не пригодился.",
-  "Жена тоже делает игру. В соседней комнате тихо...",
+  "Олеся тоже делает игру. В соседней комнате тихо...",
   "Баг найден. Это не баг, это фича.",
   "Чай заварен. +10 к продуктивности.",
   "Дима уже подал налоговую декларацию.",
@@ -1408,7 +1408,7 @@ function renderNormalPhase(){
           showCookPopup();
         } else {
           S.tea++;activateBoost();updateHUD();sfxTea();
-          showFlavor("Жена принесла чай ❤️ Respect +9999");
+          showFlavor("Олеся принесла чай ❤️ Respect +9999");
         }
       }
     }
@@ -1715,7 +1715,7 @@ function showFakeCrash(){
 function showChachaPopup(stage){
   if(S.done)return;log(`Event: Chacha stage ${stage||1}`);
   stage=stage||1;
-  sfxChacha();
+  sfxChacha();freezeInput();
   const d=document.createElement('div');
   d.className='chacha-popup';
 
@@ -1782,7 +1782,7 @@ function showChachaPopup(stage){
 
 // ── Khachapuri ──
 function showKhachapuri(){
-  if(S.done)return;
+  if(S.done)return;freezeInput();
   const d=document.createElement('div');
   d.className='khacha-popup';
   d.innerHTML=`
@@ -1827,13 +1827,14 @@ function spawnDog(){
 function spawnMarshrutka(){
   if(S.done)return;
   sfxMarshrutka();
+  freezeInput();
   showFlavor("⚠️ МАРШРУТКА! Берегись!");
   ents.marshrutka={x:-80,y:cH*.4,vx:6};
   // If not clicked away, lose progress
   setTimeout(()=>{
     if(ents.marshrutka){
       S.progress=Math.max(0,S.progress-4);updateHUD();
-      showFlavor("Маршрутка проехала... -4% к нервам");
+      showFlavor("Маршрутка проехала... Как она попала в квартиру?!");
       shakeScreen();
     }
   },1200);
@@ -1860,29 +1861,29 @@ function showSODown(){
 function sfxCooking(){tone(600,.1,'sine',.05);setTimeout(()=>tone(800,.1,'sine',.04),120);setTimeout(()=>tone(1000,.15,'sine',.03),240)}
 const COOK_EVENTS=[
   {
-    emoji:'🍳',title:'АЭРОФРИТЮРНИЦА!',
-    text:'Жена готовит куриные наггетсы в аэрофритюрнице. Здоровая еда!',
+    emoji:'🥞',title:'СЫРНИКИ!',
+    text:'Олеся готовит сырники! Золотистые, с мёдом. ПП одобряет!',
     yesBtn:'Хочу!',noBtn:'Потом...',
-    yesText:'Наггетсы... 🍗 Полезно и вкусно! +2% к энергии!',yesProg:2,
-    noText:'Наггетсы ждут... Запах всё равно отвлекает.',noProg:0,
+    yesText:'Сырники... 🥞 Полезно и вкусно! +2% к энергии!',yesProg:2,
+    noText:'Сырники ждут... Запах всё равно отвлекает.',noProg:0,
   },
   {
     emoji:'🧇',title:'ВАФЕЛЬНИЦА!',
-    text:'Жена делает горячие сэндвичи в вафельнице! С сыром и помидорами.',
+    text:'Олеся делает горячие сэндвичи в вафельнице! С сыром и помидорами.',
     yesBtn:'Дааа!',noBtn:'Диета...',
     yesText:'Горячий сэндвич... 🧇 Сила кодинга восстановлена!',yesProg:2,
     noText:'Сэндвич ждёт в тарелке. Сила воли +100.',noProg:0,noMult:true,
   },
   {
-    emoji:'🥗',title:'АЭРОФРИТЮРНИЦА!',
-    text:'Жена готовит овощи-гриль в аэрофритюрнице. Здоровый перекус!',
+    emoji:'🥧',title:'ПП-ВАТРУШЕЧКИ!',
+    text:'Олеся готовит ПП-ватрушечки! С творогом и ягодами.',
     yesBtn:'Обожаю!',noBtn:'Позже',
-    yesText:'Овощи-гриль! 🥗 Витамины для мозга!',yesProg:3,
-    noText:'Овощи остывают... Но витамины никуда не денутся.',noProg:0,
+    yesText:'ПП-ватрушечки! 🥧 Творог для мозга!',yesProg:3,
+    noText:'Ватрушечки остывают... Но творог никуда не денется.',noProg:0,
   },
   {
     emoji:'🧇',title:'ВАФЕЛЬНИЦА!',
-    text:'Жена жарит вафли на десерт! С мёдом и орехами.',
+    text:'Олеся жарит вафли на десерт! С мёдом и орехами.',
     yesBtn:'Ммм!',noBtn:'Нельзя...',
     yesText:'Вафли с мёдом... 🧇 Сахар в крови = скорость кодинга!',yesProg:1,yesMult:true,
     noText:'Вафли пахнут невероятно... Но диета есть диета.',noProg:0,
@@ -1892,8 +1893,8 @@ function showCookPopup(){
   if(S.done)return;
   const ev=COOK_EVENTS[S.wifeCookCount%COOK_EVENTS.length];
   S.wifeCookCount++;
-  log('Event: Wife cooking — '+ev.title);
-  sfxCooking();
+  log('Event: Olesya cooking — '+ev.title);
+  sfxCooking();freezeInput();
   const d=document.createElement('div');
   d.className='cook-popup';
   d.innerHTML=`
@@ -2140,6 +2141,7 @@ function showRandomFlavor(){
 }
 
 function showMilestonePopup(text){
+  freezeInput();
   const el=document.createElement('div');
   el.className='milestone-popup';el.textContent=text;
   document.body.appendChild(el);
@@ -2167,7 +2169,7 @@ function activateBoost(){
 //  CLICK HANDLER
 // ══════════════════════════════════════════════
 function handleGameClick(e){
-  if(S.done)return;
+  if(S.done||inputFrozen)return;
 
   if(S.swimPhase){handleSwimClick();return}
 
@@ -2329,6 +2331,8 @@ function advanceClock(){
 //  SPAWNERS
 // ══════════════════════════════════════════════
 let bugInt,teaInt,flavInt,clkInt,wifeTO;
+let inputFrozen=false;
+function freezeInput(){inputFrozen=true;setTimeout(()=>{inputFrozen=false},500)}
 
 function spawnBug(){
   if(S.done||S.swimPhase)return;
@@ -2401,7 +2405,7 @@ function winGame(){
       `Чашек чая: ${S.tea}<br>`+
       `Кликов: ${S.clicks}<br>`+
       `Макс. комбо: x${S.maxCombo}<br>`+
-      `Визитов жены: ${S.wifeVisits}`;
+      `Визитов Олеси: ${S.wifeVisits}`;
 
     const cs=['#ff4757','#00ff88','#00d4ff','#ffd32a','#ff6b9d','#a855f7','#ff9f43'];
     for(let i=0;i<80;i++){
