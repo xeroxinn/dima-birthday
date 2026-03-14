@@ -155,22 +155,23 @@
 
   /* Milestone popup */
   .milestone-popup{
-    position:fixed;top:50%;left:5%;right:5%;transform:translateY(-50%);
+    position:fixed;top:90px;left:5%;right:5%;
     font-size:clamp(13px,3.5vw,16px);color:var(--yellow);text-align:center;
     line-height:2;z-index:30;pointer-events:none;
     animation:milestonePop 2.5s ease-out forwards;
     text-shadow:0 0 15px var(--yellow);
     background:rgba(0,0,0,.9);padding:18px 5%;border:2px solid var(--yellow);
-    white-space:pre-line;
+    white-space:pre-line;max-height:55vh;overflow-y:auto;
   }
-  @keyframes milestonePop{0%{opacity:0;transform:translateY(-50%) scale(.5)}15%{opacity:1;transform:translateY(-50%) scale(1.05)}25%{transform:translateY(-50%) scale(1)}80%{opacity:1}100%{opacity:0}}
+  @keyframes milestonePop{0%{opacity:0;transform:scale(.5)}15%{opacity:1;transform:scale(1.05)}25%{transform:scale(1)}80%{opacity:1}100%{opacity:0}}
 
   /* Fake crash dialog */
   .fake-crash{
-    position:fixed;top:50%;left:5%;right:5%;transform:translateY(-50%);
+    position:fixed;top:90px;left:5%;right:5%;
     background:#c0c0c0;border:3px outset #fff;padding:0;
     z-index:60;font-family:sans-serif;
     box-shadow:4px 4px 0 rgba(0,0,0,.4);pointer-events:auto;
+    max-height:55vh;overflow-y:auto;
   }
   .crash-title{
     background:linear-gradient(90deg,#000080,#1084d0);color:#fff;
@@ -194,10 +195,10 @@
 
   /* Chacha popup */
   .chacha-popup{
-    position:fixed;top:50%;left:5%;right:5%;transform:translateY(-50%);
+    position:fixed;top:90px;left:5%;right:5%;
     background:var(--panel);border:2px solid var(--purple);
     padding:20px 6%;z-index:55;text-align:center;
-    pointer-events:auto;
+    pointer-events:auto;max-height:55vh;overflow-y:auto;
   }
   .chacha-popup h3{font-size:clamp(14px,4vw,18px);color:var(--purple);margin-bottom:12px;line-height:1.6}
   .chacha-popup p{font-size:clamp(9px,2.5vw,12px);color:rgba(200,200,230,.7);margin-bottom:16px;line-height:2.2;word-break:break-word}
@@ -223,10 +224,10 @@
 
   /* Khachapuri choice */
   .khacha-popup{
-    position:fixed;top:50%;left:5%;right:5%;transform:translateY(-50%);
+    position:fixed;top:90px;left:5%;right:5%;
     background:var(--panel);border:2px solid var(--orange);
     padding:20px 5%;z-index:55;text-align:center;
-    pointer-events:auto;
+    pointer-events:auto;max-height:55vh;overflow-y:auto;
   }
   .khacha-popup h3{font-size:clamp(14px,4vw,18px);color:var(--orange);margin-bottom:10px;line-height:1.6}
   .khacha-popup p{font-size:clamp(9px,2.5vw,12px);color:rgba(200,200,230,.7);margin-bottom:14px;line-height:2.2;word-break:break-word}
@@ -240,10 +241,10 @@
 
   /* Wife cooking popup */
   .cook-popup{
-    position:fixed;top:50%;left:5%;right:5%;transform:translateY(-50%);
+    position:fixed;top:90px;left:5%;right:5%;
     background:var(--panel);border:2px solid var(--pink);
     padding:20px 6%;z-index:55;text-align:center;
-    pointer-events:auto;
+    pointer-events:auto;max-height:55vh;overflow-y:auto;
   }
   .cook-popup h3{font-size:clamp(14px,4vw,18px);color:var(--pink);margin-bottom:12px;line-height:1.6}
   .cook-popup p{font-size:clamp(9px,2.5vw,12px);color:rgba(200,200,230,.7);margin-bottom:16px;line-height:2.2}
@@ -485,7 +486,7 @@
 // ══════════════════════════════════════════════
 //  VERSION & LOGGING
 // ══════════════════════════════════════════════
-const GAME_VERSION='2.7.0';
+const GAME_VERSION='2.8.0';
 const gameLog=[];
 function log(msg){
   const ts=new Date().toISOString().slice(11,19);
@@ -2060,7 +2061,7 @@ function showChachaPopup(stage){
   sfxChacha();freezeInput();
   // Spawn neighbor with bottle on first stage only
   if(stage===1){
-    ents.neighbor={x:-120,y:cH*.25,vx:3,stopX:cW*.15,phase:'enter',holding:'bottle'};
+    ents.neighbor={x:-120,y:cH*.55,vx:3,stopX:cW*.25,phase:'enter',holding:'bottle'};
   }
   const d=document.createElement('div');
   d.className='chacha-popup';
@@ -2134,7 +2135,7 @@ function dismissNeighbor(){
 function showKhachapuri(){
   if(S.done)return;freezeInput();sfxChacha();
   // Spawn Georgian neighbor with plate
-  ents.neighbor={x:-120,y:cH*.25,vx:3,stopX:cW*.15,phase:'enter',holding:'plate'};
+  ents.neighbor={x:-120,y:cH*.55,vx:3,stopX:cW*.25,phase:'enter',holding:'plate'};
   const d=document.createElement('div');
   d.className='khacha-popup';
   d.innerHTML=`
@@ -2311,6 +2312,7 @@ function showTypingChallenge(){
     <div class="timer-bar"><div class="timer-fill" id="typingTimer" style="width:100%"></div></div>
   `;
   document.body.appendChild(d);
+  delayButtons(d,800);
 
   const timerFill=d.querySelector('#typingTimer');
   let timerInt=setInterval(()=>{
@@ -2715,7 +2717,6 @@ function spawnBug(){
 
   setTimeout(()=>{
     if(!b.dead){
-      S.progress=Math.max(0,S.progress-3);updateHUD();
       b.dead=true;
       // YOU DIED
       if(!S.youDied&&S.progress>20&&S.progress<50&&Math.random()<.25){
