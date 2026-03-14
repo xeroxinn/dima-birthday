@@ -193,15 +193,15 @@
   .chacha-popup{
     position:fixed;top:50%;left:5%;right:5%;transform:translateY(-50%);
     background:var(--panel);border:2px solid var(--purple);
-    padding:20px 5%;z-index:55;text-align:center;
+    padding:20px 6%;z-index:55;text-align:center;
     pointer-events:auto;
   }
   .chacha-popup h3{font-size:clamp(14px,4vw,18px);color:var(--purple);margin-bottom:12px;line-height:1.6}
-  .chacha-popup p{font-size:clamp(10px,3vw,13px);color:var(--dim);margin-bottom:16px;line-height:1.8}
-  .chacha-btns{display:flex;gap:10px;justify-content:center}
+  .chacha-popup p{font-size:clamp(9px,2.5vw,12px);color:rgba(200,200,230,.7);margin-bottom:16px;line-height:2.2;word-break:break-word}
+  .chacha-btns{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
   .chacha-btns button{
-    font-family:'Press Start 2P',monospace;font-size:clamp(11px,3vw,13px);
-    padding:12px 18px;border:none;cursor:pointer;
+    font-family:'Press Start 2P',monospace;font-size:clamp(10px,2.5vw,12px);
+    padding:12px 16px;border:none;cursor:pointer;line-height:1.6;
   }
   .chacha-yes{background:var(--purple);color:#fff}
   .chacha-no{background:var(--surface);color:var(--text);border:1px solid var(--dim) !important}
@@ -226,14 +226,31 @@
     pointer-events:auto;
   }
   .khacha-popup h3{font-size:clamp(14px,4vw,18px);color:var(--orange);margin-bottom:10px;line-height:1.6}
-  .khacha-popup p{font-size:clamp(10px,3vw,13px);color:var(--dim);margin-bottom:14px;line-height:1.8}
-  .khacha-btns{display:flex;gap:10px;justify-content:center}
+  .khacha-popup p{font-size:clamp(9px,2.5vw,12px);color:rgba(200,200,230,.7);margin-bottom:14px;line-height:2.2;word-break:break-word}
+  .khacha-btns{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
   .khacha-btns button{
-    font-family:'Press Start 2P',monospace;font-size:clamp(11px,3vw,13px);
-    padding:12px 16px;border:none;cursor:pointer;
+    font-family:'Press Start 2P',monospace;font-size:clamp(10px,2.5vw,12px);
+    padding:12px 16px;border:none;cursor:pointer;line-height:1.6;
   }
   .khacha-yes{background:var(--orange);color:#fff}
   .khacha-no{background:var(--surface);color:var(--text);border:1px solid var(--dim) !important}
+
+  /* Wife cooking popup */
+  .cook-popup{
+    position:fixed;top:50%;left:5%;right:5%;transform:translateY(-50%);
+    background:var(--panel);border:2px solid var(--pink);
+    padding:20px 6%;z-index:55;text-align:center;
+    pointer-events:auto;
+  }
+  .cook-popup h3{font-size:clamp(14px,4vw,18px);color:var(--pink);margin-bottom:12px;line-height:1.6}
+  .cook-popup p{font-size:clamp(9px,2.5vw,12px);color:rgba(200,200,230,.7);margin-bottom:16px;line-height:2.2}
+  .cook-btns{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+  .cook-btns button{
+    font-family:'Press Start 2P',monospace;font-size:clamp(10px,2.5vw,12px);
+    padding:12px 16px;border:none;cursor:pointer;line-height:1.6;
+  }
+  .cook-yes{background:var(--pink);color:#fff}
+  .cook-no{background:var(--surface);color:var(--text);border:1px solid var(--dim) !important}
 
   /* Swimming phase overlay */
   .swim-overlay{
@@ -317,18 +334,31 @@
     display:flex;flex-direction:column;align-items:center;justify-content:center;
     z-index:55;text-align:center;pointer-events:auto;padding:20px;
   }
-  .typing-overlay h3{font-size:clamp(14px,4vw,18px);color:var(--accent);margin-bottom:14px;line-height:1.6}
-  .typing-overlay .code-line{
-    font-family:'Press Start 2P',monospace;font-size:clamp(12px,3.5vw,15px);
-    color:var(--green);margin-bottom:18px;letter-spacing:2px;line-height:2;
-    padding:10px 16px;background:rgba(0,255,136,.05);border:1px solid var(--green);
+  .typing-overlay h3{font-size:clamp(14px,4vw,18px);color:var(--accent);margin-bottom:10px;line-height:1.6}
+  .typing-overlay .puzzle-hint{font-size:clamp(9px,2.5vw,11px);color:var(--dim);margin-bottom:14px;line-height:1.8}
+  .typing-overlay .puzzle-target{
+    width:90%;max-width:340px;margin-bottom:16px;padding:10px;
+    background:rgba(0,255,136,.05);border:1px solid rgba(0,255,136,.3);
+    text-align:left;
   }
-  .typing-overlay .input-line{
-    font-family:'Press Start 2P',monospace;font-size:clamp(12px,3.5vw,15px);
-    color:var(--text);letter-spacing:2px;min-height:1.5em;
+  .typing-overlay .puzzle-target .tgt-line{
+    font-family:'Press Start 2P',monospace;font-size:clamp(8px,2.2vw,10px);
+    color:var(--green);line-height:2.2;opacity:.5;
   }
-  .typing-overlay .input-line .correct{color:var(--green)}
-  .typing-overlay .input-line .wrong{color:var(--red);text-decoration:underline}
+  .typing-overlay .puzzle-target .tgt-line.placed{opacity:1;color:#fff}
+  .typing-overlay .puzzle-choices{
+    display:flex;flex-direction:column;gap:8px;width:90%;max-width:340px;
+  }
+  .typing-overlay .puzzle-btn{
+    font-family:'Press Start 2P',monospace;font-size:clamp(8px,2.2vw,10px);
+    padding:10px 12px;background:var(--surface);border:1px solid var(--dim);
+    color:var(--text);cursor:pointer;text-align:left;line-height:1.6;
+    transition:border-color .2s,background .2s;
+  }
+  .typing-overlay .puzzle-btn:active{transform:scale(.97)}
+  .typing-overlay .puzzle-btn.correct-pick{border-color:var(--green);background:rgba(0,255,136,.15);color:var(--green)}
+  .typing-overlay .puzzle-btn.wrong-pick{border-color:var(--red);background:rgba(255,71,87,.15);color:var(--red);animation:shake .3s}
+  .typing-overlay .puzzle-btn.used{opacity:.3;pointer-events:none}
   .typing-overlay .timer-bar{width:80%;height:6px;background:var(--surface);margin-top:14px;overflow:hidden}
   .typing-overlay .timer-fill{height:100%;background:var(--accent);transition:width .1s linear}
 
@@ -407,7 +437,7 @@
     ⚠️ Жди сюрпризов...
   </div>
   <button class="start-btn" id="startBtn">► НАЧАТЬ ДЕНЬ</button>
-  <div style="font-size:6px;color:rgba(255,255,255,.15);margin-top:12px">v2.3.0</div>
+  <div style="font-size:6px;color:rgba(255,255,255,.15);margin-top:12px">v2.4.0</div>
 </div>
 
 <!-- GAME -->
@@ -456,7 +486,7 @@
 // ══════════════════════════════════════════════
 //  VERSION & LOGGING
 // ══════════════════════════════════════════════
-const GAME_VERSION='2.3.0';
+const GAME_VERSION='2.4.0';
 const gameLog=[];
 function log(msg){
   const ts=new Date().toISOString().slice(11,19);
@@ -861,6 +891,7 @@ const S={
   fogGateShown:false,
   goldenCommitTimer:0,
   totalTeaCollected:0,caffeineActive:false,caffeineEnd:0,
+  wifeCookCount:0,  // tracks which cooking event to show next
 };
 
 const ents={bugs:[],teas:[],particles:[],wife:null,dogs:[],marshrutka:null};
@@ -885,6 +916,8 @@ const FL=[
   "Bonfire Lit. Сохранение...",
   "Собака за окном одобряет твой код.",
   "Маршрутка проехала. Все живы. Редкость.",
+  "Из кухни пахнет чем-то вкусным... 🍳",
+  "Вафельница нагревается. Диета в опасности.",
 ];
 let flIdx=0;
 
@@ -1366,9 +1399,14 @@ function renderNormalPhase(){
       w.timer--;
       if(w.timer<=0){
         w.vx=-1.5;w.phase=2;
-        S.tea++;activateBoost();updateHUD();sfxTea();
-        showFlavor("Жена принесла чай ❤️ Respect +9999");
         S.wifeVisits++;
+        if(S.wifeVisits>1&&S.wifeVisits%3===0){
+          // Cooking event instead of tea
+          showCookPopup();
+        } else {
+          S.tea++;activateBoost();updateHUD();sfxTea();
+          showFlavor("Жена принесла чай ❤️ Respect +9999");
+        }
       }
     }
     if(w.phase===2&&w.x<-50)w.done=true;
@@ -1681,7 +1719,7 @@ function showChachaPopup(stage){
   if(stage===1){
     d.innerHTML=`
       <h3>🍷 ЧАЧА!</h3>
-      <p>Соседи принесли домашнюю чачу.<br>Выпить?</p>
+      <p>Соседи принесли домашнюю чачу. Выпить?</p>
       <div class="chacha-btns">
         <button class="chacha-yes" id="chYes">Конечно!</button>
         <button class="chacha-no" id="chNo">Я на диете</button>
@@ -1690,7 +1728,7 @@ function showChachaPopup(stage){
   } else if(stage===2){
     d.innerHTML=`
       <h3>🍷 ЧАЧА!</h3>
-      <p>Сосед: «Обижаешь! Домашняя же!<br>Один стакан не считается!»</p>
+      <p>Сосед: «Обижаешь! Домашняя же! Один стакан не считается!»</p>
       <div class="chacha-btns">
         <button class="chacha-yes" id="chYes">Ну ладно...</button>
         <button class="chacha-no" id="chNo">Нет, спасибо!</button>
@@ -1699,7 +1737,7 @@ function showChachaPopup(stage){
   } else {
     d.innerHTML=`
       <h3>🍷🍷 ШТРАФНАЯ!</h3>
-      <p>Сосед: «Два раза отказался —<br>теперь штрафную!»<br><br>Налил двойную. Обратного пути нет.</p>
+      <p>Сосед: «Два раза отказался — теперь штрафную!» Налил двойную. Обратного пути нет.</p>
       <div class="chacha-btns">
         <button class="chacha-yes" id="chYes">🥂 За здоровье...</button>
       </div>
@@ -1746,7 +1784,7 @@ function showKhachapuri(){
   d.className='khacha-popup';
   d.innerHTML=`
     <h3>🥚 ХАЧАПУРИ!</h3>
-    <p>Свежий аджарский хачапури на столе.<br>Съесть?</p>
+    <p>Свежий аджарский хачапури на столе. Съесть?</p>
     <div class="khacha-btns">
       <button class="khacha-yes" id="khYes">Ооо да!</button>
       <button class="khacha-no" id="khNo">Диета...</button>
@@ -1815,64 +1853,144 @@ function showSODown(){
   },3000);
 }
 
-// ── Typing Challenge ──
-const CODE_SNIPPETS=[
-  'for(let i=0;i<10;i++)',
-  'if(bug.dead) return;',
-  'const x = Math.random();',
-  'player.hp -= damage;',
-  'while(!gameOver)',
-  'function update(dt)',
-  'arr.push(newItem);',
-  'return this.score;',
+// ── Wife Cooking Events ──
+function sfxCooking(){tone(600,.1,'sine',.05);setTimeout(()=>tone(800,.1,'sine',.04),120);setTimeout(()=>tone(1000,.15,'sine',.03),240)}
+const COOK_EVENTS=[
+  {
+    emoji:'🍳',title:'АЭРОФРИТЮРНИЦА!',
+    text:'Жена готовит куриные наггетсы в аэрофритюрнице. Здоровая еда!',
+    yesBtn:'Хочу!',noBtn:'Потом...',
+    yesText:'Наггетсы... 🍗 Полезно и вкусно! +2% к энергии!',yesProg:2,
+    noText:'Наггетсы ждут... Запах всё равно отвлекает.',noProg:0,
+  },
+  {
+    emoji:'🧇',title:'ВАФЕЛЬНИЦА!',
+    text:'Жена делает горячие сэндвичи в вафельнице! С сыром и помидорами.',
+    yesBtn:'Дааа!',noBtn:'Диета...',
+    yesText:'Горячий сэндвич... 🧇 Сила кодинга восстановлена!',yesProg:2,
+    noText:'Сэндвич ждёт в тарелке. Сила воли +100.',noProg:0,noMult:true,
+  },
+  {
+    emoji:'🥗',title:'АЭРОФРИТЮРНИЦА!',
+    text:'Жена готовит овощи-гриль в аэрофритюрнице. Здоровый перекус!',
+    yesBtn:'Обожаю!',noBtn:'Позже',
+    yesText:'Овощи-гриль! 🥗 Витамины для мозга!',yesProg:3,
+    noText:'Овощи остывают... Но витамины никуда не денутся.',noProg:0,
+  },
+  {
+    emoji:'🧇',title:'ВАФЕЛЬНИЦА!',
+    text:'Жена жарит вафли на десерт! С мёдом и орехами.',
+    yesBtn:'Ммм!',noBtn:'Нельзя...',
+    yesText:'Вафли с мёдом... 🧇 Сахар в крови = скорость кодинга!',yesProg:1,yesMult:true,
+    noText:'Вафли пахнут невероятно... Но диета есть диета.',noProg:0,
+  },
+];
+function showCookPopup(){
+  if(S.done)return;
+  const ev=COOK_EVENTS[S.wifeCookCount%COOK_EVENTS.length];
+  S.wifeCookCount++;
+  log('Event: Wife cooking — '+ev.title);
+  sfxCooking();
+  const d=document.createElement('div');
+  d.className='cook-popup';
+  d.innerHTML=`
+    <h3>${ev.emoji} ${ev.title}</h3>
+    <p>${ev.text}</p>
+    <div class="cook-btns">
+      <button class="cook-yes" id="ckYes">${ev.yesBtn}</button>
+      <button class="cook-no" id="ckNo">${ev.noBtn}</button>
+    </div>
+  `;
+  document.body.appendChild(d);
+  d.querySelector('#ckYes').onclick=()=>{
+    d.remove();
+    S.progress=Math.min(100,S.progress+ev.yesProg);updateHUD();
+    showFlavor(ev.yesText);
+    if(ev.yesMult){S.mult=2;S.boostEnd=Date.now()+5000;document.getElementById('boostInd').classList.add('active')}
+    spawnHearts(cW*.6,cH*.45);
+    if(S.progress>=100)winGame();
+  };
+  d.querySelector('#ckNo').onclick=()=>{
+    d.remove();
+    showFlavor(ev.noText);
+    if(ev.noMult){S.mult=1.5;S.boostEnd=Date.now()+4000;document.getElementById('boostInd').classList.add('active')}
+  };
+}
+
+// ── Code Review Puzzle ──
+const CODE_PUZZLES=[
+  {name:'Game Loop',lines:['function gameLoop() {','  update(deltaTime);','  render(ctx);','  requestAnimationFrame(gameLoop);','}']},
+  {name:'Spawn Bug',lines:['function spawnBug() {','  const bug = new Bug();','  bug.x = Math.random() * w;','  bugs.push(bug);','}']},
+  {name:'Check HP',lines:['if (player.hp <= 0) {','  gameOver = true;','  showDeathScreen();','  return;','}']},
+  {name:'Collect Item',lines:['function collect(item) {','  inventory.push(item);','  score += item.value;','  playSound("pickup");','}']},
 ];
 function showTypingChallenge(){
-  if(S.done)return;log('Event: Typing challenge at '+Math.floor(S.progress)+'%');
+  if(S.done)return;log('Event: Code puzzle at '+Math.floor(S.progress)+'%');
   S.typingActive=true;
   sfxBoss();
-  const snippet=CODE_SNIPPETS[Math.floor(Math.random()*CODE_SNIPPETS.length)];
-  let typed='';
+  const puzzle=CODE_PUZZLES[Math.floor(Math.random()*CODE_PUZZLES.length)];
+  const correctOrder=[...puzzle.lines];
+  const shuffled=[...puzzle.lines];
+  for(let i=shuffled.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[shuffled[i],shuffled[j]]=[shuffled[j],shuffled[i]]}
+  // Ensure shuffled is different from correct
+  if(shuffled.every((l,i)=>l===correctOrder[i])){[shuffled[0],shuffled[1]]=[shuffled[1],shuffled[0]]}
+  let placed=0;
+  let mistakes=0;
   const startTime=Date.now();
-  const DURATION=8000;
+  const DURATION=15000;
 
   const d=document.createElement('div');
   d.className='typing-overlay';d.id='typingOv';
+
+  let targetHTML=correctOrder.map((_,i)=>`<div class="tgt-line" id="tgt${i}">${i+1}. ???</div>`).join('');
+  let btnsHTML=shuffled.map((line,i)=>`<button class="puzzle-btn" data-line="${line.replace(/"/g,'&quot;')}" id="pb${i}">${line.replace(/</g,'&lt;')}</button>`).join('');
+
   d.innerHTML=`
     <h3>⌨️ КОД-РЕВЬЮ!</h3>
-    <p style="font-size:clamp(10px,2.8vw,13px);color:var(--dim);margin-bottom:8px">Перепиши код точно как показано:</p>
-    <div class="code-line">${snippet}</div>
-    <div class="input-line" id="typingInput">_</div>
+    <div class="puzzle-hint">Собери функцию — нажимай строки по порядку:</div>
+    <div class="puzzle-target" id="puzzleTarget">${targetHTML}</div>
+    <div class="puzzle-choices" id="puzzleChoices">${btnsHTML}</div>
     <div class="timer-bar"><div class="timer-fill" id="typingTimer" style="width:100%"></div></div>
   `;
   document.body.appendChild(d);
 
   const timerFill=d.querySelector('#typingTimer');
-  const inputEl=d.querySelector('#typingInput');
   let timerInt=setInterval(()=>{
     const elapsed=Date.now()-startTime;
     const pct=Math.max(0,100-elapsed/DURATION*100);
     timerFill.style.width=pct+'%';
     if(pct<=30)timerFill.style.background='var(--red)';
-    if(elapsed>=DURATION){clearInterval(timerInt);finishTyping(false)}
+    if(elapsed>=DURATION){clearInterval(timerInt);finishPuzzle(false)}
   },50);
 
-  function updateDisplay(){
-    let html='';
-    for(let i=0;i<typed.length;i++){
-      if(typed[i]===snippet[i])html+=`<span class="correct">${typed[i]==' '?'&nbsp;':typed[i].replace(/</g,'&lt;')}</span>`;
-      else html+=`<span class="wrong">${typed[i]==' '?'&nbsp;':typed[i].replace(/</g,'&lt;')}</span>`;
+  d.querySelector('#puzzleChoices').addEventListener('click',(e)=>{
+    const btn=e.target.closest('.puzzle-btn');
+    if(!btn||btn.classList.contains('used'))return;
+    const line=btn.getAttribute('data-line');
+    if(line===correctOrder[placed]){
+      // Correct!
+      sfxClick();
+      btn.classList.add('correct-pick','used');
+      const tgt=d.querySelector(`#tgt${placed}`);
+      tgt.textContent=(placed+1)+'. '+correctOrder[placed];
+      tgt.classList.add('placed');
+      placed++;
+      if(placed>=correctOrder.length){clearInterval(timerInt);setTimeout(()=>finishPuzzle(true),400)}
+    } else {
+      // Wrong
+      sfxSquash();
+      btn.classList.add('wrong-pick');
+      mistakes++;
+      setTimeout(()=>btn.classList.remove('wrong-pick'),500);
+      if(mistakes>=3){clearInterval(timerInt);finishPuzzle(false)}
     }
-    html+='<span style="animation:blink 1s infinite">_</span>';
-    inputEl.innerHTML=html;
-  }
+  });
 
-  function finishTyping(success){
-    clearInterval(timerInt);
+  function finishPuzzle(success){
     S.typingActive=false;
-    document.removeEventListener('keydown',onKey);
     d.remove();
     if(success){
-      const bonus=3+Math.floor((DURATION-(Date.now()-startTime))/1000);
+      const bonus=3+Math.floor((DURATION-(Date.now()-startTime))/2000);
       S.progress=Math.min(100,S.progress+bonus);updateHUD();
       showMilestonePopup(`✅ КОД-РЕВЬЮ ПРОЙДЕН!\n+${bonus}% к сборке!`);
       sfxMilestone();screenFlash('rgba(0,255,136,.3)');
@@ -1882,22 +2000,6 @@ function showTypingChallenge(){
       S.progress=Math.max(0,S.progress-2);updateHUD();
     }
   }
-
-  function onKey(e){
-    if(!S.typingActive)return;
-    e.preventDefault();
-    if(e.key==='Backspace'){typed=typed.slice(0,-1);updateDisplay();return}
-    if(e.key.length!==1)return;
-    typed+=e.key;
-    sfxClick();
-    updateDisplay();
-    if(typed.length>=snippet.length){
-      let correct=0;
-      for(let i=0;i<snippet.length;i++)if(typed[i]===snippet[i])correct++;
-      finishTyping(correct>=snippet.length*.8);
-    }
-  }
-  document.addEventListener('keydown',onKey);
 }
 
 // ── Fog Gate (before boss) ──
