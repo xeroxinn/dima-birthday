@@ -166,8 +166,8 @@
 
   /* Facts */
   .facts{
-    font-size:clamp(7px,1.8vw,10px);
-    line-height:2.6;
+    font-size:clamp(9px,2.5vw,13px);
+    line-height:2.8;
   }
   .facts .label{color:var(--dim)}
 
@@ -208,40 +208,40 @@
 
   /* Credits */
   .credits{
-    font-size:clamp(8px,2.2vw,12px);
-    color:var(--dim);
+    font-size:clamp(10px,3vw,14px);
+    color:var(--text);
     display:flex;align-items:center;
-    justify-content:center;gap:16px;
-    padding:8px 0;
+    justify-content:center;gap:20px;
+    padding:16px 0;
   }
 
   /* Hearts pixel art via box-shadow */
   .heart{
-    width:3px;height:3px;
+    width:4px;height:4px;
     position:relative;
     display:inline-block;
     flex-shrink:0;
   }
   .heart::before{
     content:'';position:absolute;
-    width:3px;height:3px;
+    width:4px;height:4px;
     box-shadow:
-      3px 0 0 currentColor, 6px 0 0 currentColor,
-      12px 0 0 currentColor, 15px 0 0 currentColor,
-      0 3px 0 currentColor, 3px 3px 0 currentColor,
-      6px 3px 0 currentColor, 9px 3px 0 currentColor,
-      12px 3px 0 currentColor, 15px 3px 0 currentColor,
-      18px 3px 0 currentColor,
-      0 6px 0 currentColor, 3px 6px 0 currentColor,
-      6px 6px 0 currentColor, 9px 6px 0 currentColor,
-      12px 6px 0 currentColor, 15px 6px 0 currentColor,
-      18px 6px 0 currentColor,
-      3px 9px 0 currentColor, 6px 9px 0 currentColor,
-      9px 9px 0 currentColor, 12px 9px 0 currentColor,
-      15px 9px 0 currentColor,
-      6px 12px 0 currentColor, 9px 12px 0 currentColor,
-      12px 12px 0 currentColor,
-      9px 15px 0 currentColor;
+      4px 0 0 currentColor, 8px 0 0 currentColor,
+      16px 0 0 currentColor, 20px 0 0 currentColor,
+      0 4px 0 currentColor, 4px 4px 0 currentColor,
+      8px 4px 0 currentColor, 12px 4px 0 currentColor,
+      16px 4px 0 currentColor, 20px 4px 0 currentColor,
+      24px 4px 0 currentColor,
+      0 8px 0 currentColor, 4px 8px 0 currentColor,
+      8px 8px 0 currentColor, 12px 8px 0 currentColor,
+      16px 8px 0 currentColor, 20px 8px 0 currentColor,
+      24px 8px 0 currentColor,
+      4px 12px 0 currentColor, 8px 12px 0 currentColor,
+      12px 12px 0 currentColor, 16px 12px 0 currentColor,
+      20px 12px 0 currentColor,
+      8px 16px 0 currentColor, 12px 16px 0 currentColor,
+      16px 16px 0 currentColor,
+      12px 20px 0 currentColor;
   }
 
   /* Shooting star */
@@ -362,7 +362,7 @@
   <div class="section mt1" style="padding-bottom:8px">
     <div class="credits">
       <span class="heart" style="color:var(--pink)"></span>
-      <span>from Igor & Marina</span>
+      <span>от Игоря и Марины</span>
       <span class="heart" style="color:var(--red)"></span>
     </div>
   </div>

@@ -1747,6 +1747,7 @@ function showChachaPopup(stage){
     `;
   }
   document.body.appendChild(d);
+  delayButtons(d);
 
   const drinkChacha=(penalty)=>{
     d.remove();
@@ -1794,6 +1795,7 @@ function showKhachapuri(){
     </div>
   `;
   document.body.appendChild(d);
+  delayButtons(d);
 
   d.querySelector('#khYes').onclick=()=>{
     d.remove();
@@ -1906,6 +1908,7 @@ function showCookPopup(){
     </div>
   `;
   document.body.appendChild(d);
+  delayButtons(d);
   d.querySelector('#ckYes').onclick=()=>{
     d.remove();
     S.progress=Math.min(100,S.progress+ev.yesProg);updateHUD();
@@ -2333,6 +2336,11 @@ function advanceClock(){
 let bugInt,teaInt,flavInt,clkInt,wifeTO;
 let inputFrozen=false;
 function freezeInput(){inputFrozen=true;setTimeout(()=>{inputFrozen=false},500)}
+function delayButtons(container,ms){
+  const btns=container.querySelectorAll('button');
+  btns.forEach(b=>{b.disabled=true;b.style.opacity='.4'});
+  setTimeout(()=>btns.forEach(b=>{b.disabled=false;b.style.opacity='1'}),ms||600);
+}
 
 function spawnBug(){
   if(S.done||S.swimPhase)return;
