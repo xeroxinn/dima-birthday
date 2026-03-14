@@ -1,10 +1,506 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<script>window.location.replace('output/card.html')</script>
+<title>С Днём Рождения, Дима!</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --bg:#0f0e17;--surface:#1a1a2e;--panel:#16213e;
+    --accent:#00d4ff;--green:#00ff88;--red:#ff4757;
+    --yellow:#ffd32a;--orange:#ff9f43;--pink:#ff6b9d;
+    --purple:#a855f7;--text:#e8e8e8;--dim:#4a4a6a;
+  }
+  body{
+    background:var(--bg);color:var(--text);
+    font-family:'Press Start 2P',monospace;
+    min-height:100dvh;overflow-x:hidden;
+    display:flex;justify-content:center;
+  }
+  .card{
+    width:100%;max-width:480px;
+    padding:20px 16px 30px;
+    position:relative;overflow:hidden;
+    background:linear-gradient(180deg,#0f0e17 0%,#14132a 50%,#1a1830 100%);
+  }
+
+  /* Stars */
+  .stars{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+  .star{
+    position:absolute;border-radius:50%;
+    background:#fff;
+    animation:twinkle var(--dur) ease-in-out infinite alternate;
+  }
+  @keyframes twinkle{
+    0%{opacity:var(--lo)}
+    100%{opacity:var(--hi)}
+  }
+
+  /* Floating code symbols */
+  .code-sym{
+    position:absolute;
+    font-family:'Press Start 2P',monospace;
+    font-size:clamp(8px,2vw,12px);
+    color:rgba(74,74,106,.15);
+    animation:floatUp var(--dur) linear infinite;
+    pointer-events:none;
+  }
+  @keyframes floatUp{
+    0%{transform:translateY(0);opacity:.15}
+    90%{opacity:.08}
+    100%{transform:translateY(-110vh);opacity:0}
+  }
+
+  /* Pixel border */
+  .px-border{
+    display:flex;gap:2px;justify-content:center;
+    flex-wrap:wrap;padding:0 4px;
+  }
+  .px-border span{
+    width:6px;height:4px;display:inline-block;
+    flex-shrink:0;
+  }
+
+  /* Section spacing */
+  .section{text-align:center;position:relative;z-index:2}
+  .mt1{margin-top:12px}
+  .mt2{margin-top:20px}
+  .mt3{margin-top:28px}
+
+  /* Pixel art icons */
+  .icons-row{
+    display:flex;justify-content:space-between;
+    align-items:center;padding:12px 20px;
+    position:relative;z-index:2;
+  }
+  .pixel-icon{image-rendering:pixelated}
+
+  /* Title */
+  .title{
+    font-size:clamp(20px,6vw,32px);
+    color:var(--accent);
+    text-shadow:2px 2px 0 rgba(0,212,255,.2),4px 4px 8px rgba(0,212,255,.1);
+    line-height:1.8;
+  }
+  .name{
+    font-size:clamp(28px,8vw,44px);
+    color:var(--green);
+    text-shadow:2px 2px 0 rgba(0,255,136,.2),0 0 20px rgba(0,255,136,.15);
+    line-height:1.6;
+  }
+  .subtitle{
+    font-size:clamp(10px,3vw,16px);
+    line-height:2;
+  }
+  .subtitle .yellow{color:var(--yellow)}
+
+  /* Play button */
+  .play-btn{
+    display:inline-block;
+    font-family:'Press Start 2P',monospace;
+    font-size:clamp(16px,5vw,24px);
+    color:#fff;
+    background:linear-gradient(135deg,var(--green),var(--accent));
+    padding:18px 40px;
+    border:none;
+    cursor:pointer;
+    text-decoration:none;
+    position:relative;
+    transition:transform .15s,box-shadow .15s;
+    animation:btnPulse 2s ease-in-out infinite;
+    line-height:1.6;
+  }
+  .play-btn:active{transform:scale(.95)}
+  .play-btn::before,.play-btn::after,
+  .play-btn .corner-bl,.play-btn .corner-br{
+    content:'';position:absolute;
+    width:10px;height:10px;background:var(--yellow);
+  }
+  .play-btn::before{top:-4px;left:-4px}
+  .play-btn::after{top:-4px;right:-4px}
+  .play-btn .corner-bl{bottom:-4px;left:-4px}
+  .play-btn .corner-br{bottom:-4px;right:-4px}
+  @keyframes btnPulse{
+    0%,100%{box-shadow:0 0 0 rgba(0,255,136,0),0 0 0 rgba(0,255,136,0)}
+    50%{box-shadow:0 0 30px rgba(0,255,136,.3),0 4px 20px rgba(0,0,0,.4)}
+  }
+  .play-hint{
+    font-size:clamp(8px,2vw,11px);
+    color:var(--dim);
+    margin-top:16px;
+    line-height:1.8;
+    animation:blink 1.5s ease-in-out infinite;
+  }
+  @keyframes blink{
+    0%,100%{opacity:.4}
+    50%{opacity:1}
+  }
+
+  /* Terminal block */
+  .terminal{
+    background:#0c0b14;
+    border:1px solid var(--dim);
+    border-radius:4px;
+    text-align:left;
+    padding:0;
+    margin:0 8px;
+    overflow:hidden;
+  }
+  .term-bar{
+    display:flex;gap:6px;
+    padding:8px 10px;
+    background:rgba(255,255,255,.03);
+  }
+  .term-dot{width:8px;height:8px;border-radius:50%}
+  .term-body{padding:10px 14px}
+  .term-line{
+    font-size:clamp(7px,1.8vw,10px);
+    line-height:2.2;
+    white-space:pre;
+  }
+
+  /* Facts */
+  .facts{
+    font-size:clamp(7px,1.8vw,10px);
+    line-height:2.6;
+  }
+  .facts .label{color:var(--dim)}
+
+  /* Skyline */
+  .skyline{
+    display:flex;align-items:flex-end;
+    gap:2px;padding:0 4px;
+    position:relative;z-index:1;
+  }
+  .building{
+    flex:1;background:#12111c;
+    position:relative;min-width:4px;
+  }
+  .building .win{
+    position:absolute;width:3px;height:3px;
+    opacity:.25;
+  }
+
+  /* Church dome */
+  .dome{
+    position:relative;
+    flex:1.5;
+    background:#12111c;
+    border-radius:50% 50% 0 0;
+  }
+  .cross{
+    position:absolute;top:-14px;left:50%;
+    transform:translateX(-50%);
+    width:3px;height:10px;
+    background:var(--yellow);
+  }
+  .cross::after{
+    content:'';position:absolute;
+    top:2px;left:-4px;
+    width:11px;height:3px;
+    background:var(--yellow);
+  }
+
+  /* Credits */
+  .credits{
+    font-size:clamp(7px,1.8vw,10px);
+    color:var(--dim);
+    display:flex;align-items:center;
+    justify-content:center;gap:12px;
+  }
+
+  /* Hearts pixel art via box-shadow */
+  .heart{
+    width:4px;height:4px;
+    position:relative;
+    display:inline-block;
+  }
+  .heart::before{
+    content:'';position:absolute;
+    width:4px;height:4px;
+    box-shadow:
+      4px 0 0 currentColor, 8px 0 0 currentColor,
+      16px 0 0 currentColor, 20px 0 0 currentColor,
+      0 4px 0 currentColor, 4px 4px 0 currentColor,
+      8px 4px 0 currentColor, 12px 4px 0 currentColor,
+      16px 4px 0 currentColor, 20px 4px 0 currentColor,
+      24px 4px 0 currentColor,
+      0 8px 0 currentColor, 4px 8px 0 currentColor,
+      8px 8px 0 currentColor, 12px 8px 0 currentColor,
+      16px 8px 0 currentColor, 20px 8px 0 currentColor,
+      24px 8px 0 currentColor,
+      4px 12px 0 currentColor, 8px 12px 0 currentColor,
+      12px 12px 0 currentColor, 16px 12px 0 currentColor,
+      20px 12px 0 currentColor,
+      8px 16px 0 currentColor, 12px 16px 0 currentColor,
+      16px 16px 0 currentColor,
+      12px 20px 0 currentColor;
+  }
+
+  /* Shooting star */
+  .shooting-star{
+    position:absolute;
+    width:80px;height:1px;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.6),transparent);
+    transform:rotate(-35deg);
+    animation:shoot 4s ease-in infinite;
+    opacity:0;
+    z-index:1;
+  }
+  @keyframes shoot{
+    0%{opacity:0;transform:rotate(-35deg) translateX(-100px)}
+    5%{opacity:1}
+    15%{opacity:0;transform:rotate(-35deg) translateX(300px)}
+    100%{opacity:0}
+  }
+
+</style>
 </head>
+<body>
+<div class="card" id="card">
+  <!-- Stars -->
+  <div class="stars" id="stars"></div>
+
+  <!-- Shooting star -->
+  <div class="shooting-star" style="top:12%;left:10%"></div>
+  <div class="shooting-star" style="top:45%;left:60%;animation-delay:7s"></div>
+
+  <!-- Floating code symbols -->
+  <div id="codeSyms"></div>
+
+  <!-- Top border -->
+  <div class="px-border" id="topBorder"></div>
+
+  <!-- Icons row -->
+  <div class="icons-row mt1">
+    <canvas id="iconCtrl" width="50" height="30" class="pixel-icon"></canvas>
+    <canvas id="iconBug" width="30" height="25" class="pixel-icon"></canvas>
+    <canvas id="iconTea" width="35" height="30" class="pixel-icon"></canvas>
+  </div>
+
+  <!-- Title -->
+  <div class="section mt2">
+    <div class="title">С ДНЁМ<br>РОЖДЕНИЯ!</div>
+  </div>
+
+  <!-- Name -->
+  <div class="section mt2">
+    <div class="name">ДИМА</div>
+  </div>
+
+  <!-- Decorative line -->
+  <div class="px-border mt2" id="midBorder1"></div>
+
+  <!-- Subtitle -->
+  <div class="section mt2">
+    <div class="subtitle">
+      Но подарок нужно<br>
+      <span class="yellow">заслужить...</span>
+    </div>
+  </div>
+
+  <!-- Play button -->
+  <div class="section mt3">
+    <a href="game/index.html" class="play-btn" id="playBtn">
+      ИГРАТЬ
+      <span class="corner-bl"></span>
+      <span class="corner-br"></span>
+    </a>
+    <div class="play-hint">нажми чтобы начать</div>
+  </div>
+
+  <!-- Decorative line -->
+  <div class="px-border mt3" id="midBorder2"></div>
+
+  <!-- Terminal -->
+  <div class="section mt2">
+    <div class="terminal">
+      <div class="term-bar">
+        <div class="term-dot" style="background:var(--red)"></div>
+        <div class="term-dot" style="background:var(--yellow)"></div>
+        <div class="term-dot" style="background:var(--green)"></div>
+      </div>
+      <div class="term-body">
+        <div class="term-line" style="color:var(--green)">$ cat warning.txt</div>
+        <div class="term-line">&nbsp;</div>
+        <div class="term-line" style="color:var(--orange)">// WARNING:</div>
+        <div class="term-line" style="color:var(--dim)">// Dark Souls скиллы</div>
+        <div class="term-line" style="color:var(--dim)">// не помогут...</div>
+        <div class="term-line" style="color:var(--purple)">// Или помогут? ;)</div>
+        <div class="term-line">&nbsp;</div>
+        <div class="term-line" style="color:var(--green)">$ echo 'YOU DIED'</div>
+        <div class="term-line" style="color:var(--red)">YOU DIED</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Facts -->
+  <div class="section mt3">
+    <div class="facts">
+      <div class="label">// LOADING FACTS...</div>
+      <div style="margin-top:8px;color:var(--purple)">490+ часов в Dark Souls</div>
+      <div>Просыпается раньше будильника</div>
+      <div style="color:var(--accent)">Чай > Кофе (всегда)</div>
+      <div style="color:var(--green)">Налоговая подана в марте</div>
+    </div>
+  </div>
+
+  <!-- Skyline -->
+  <div class="skyline mt3" id="skyline"></div>
+
+  <!-- Bottom border -->
+  <div class="px-border mt2" id="botBorder"></div>
+
+  <!-- Credits -->
+  <div class="section mt1" style="padding-bottom:8px">
+    <div class="credits">
+      <span class="heart" style="color:var(--pink)"></span>
+      <span>from Igor & Marina</span>
+      <span class="heart" style="color:var(--red)"></span>
+    </div>
+  </div>
+</div>
+
+<script>
+// Generate pixel borders
+function fillBorder(id,c1,c2){
+  const el=document.getElementById(id);
+  const n=Math.floor(el.offsetWidth/8)||60;
+  let h='';
+  for(let i=0;i<n;i++){
+    const c=i%2===0?c1:c2;
+    h+=`<span style="background:${c}"></span>`;
+  }
+  el.innerHTML=h;
+}
+fillBorder('topBorder','var(--green)','var(--accent)');
+fillBorder('midBorder1','var(--pink)','var(--purple)');
+fillBorder('midBorder2','var(--green)','var(--dim)');
+fillBorder('botBorder','var(--purple)','var(--pink)');
+
+// Generate stars
+(function(){
+  const c=document.getElementById('stars');
+  for(let i=0;i<80;i++){
+    const s=document.createElement('div');
+    s.className='star';
+    const sz=Math.random()<0.7?1:2;
+    s.style.cssText=`
+      left:${Math.random()*100}%;top:${Math.random()*100}%;
+      width:${sz}px;height:${sz}px;
+      --dur:${1.5+Math.random()*3}s;
+      --lo:${0.1+Math.random()*0.2};
+      --hi:${0.5+Math.random()*0.5};
+      animation-delay:${Math.random()*3}s;
+    `;
+    c.appendChild(s);
+  }
+})();
+
+// Generate floating code symbols
+(function(){
+  const syms=['{ }','< >','//','=> ','fn','if','0x','&&','++','[]','()','!=','##','<<','->'];
+  const c=document.getElementById('codeSyms');
+  for(let i=0;i<12;i++){
+    const d=document.createElement('div');
+    d.className='code-sym';
+    d.textContent=syms[i%syms.length];
+    d.style.cssText=`
+      left:${5+Math.random()*85}%;
+      bottom:${-10-Math.random()*20}%;
+      --dur:${20+Math.random()*30}s;
+      animation-delay:${Math.random()*20}s;
+    `;
+    c.appendChild(d);
+  }
+})();
+
+// Draw pixel art icons on canvases
+function drawPx(ctx,pixels,ox,oy,s,color){
+  ctx.fillStyle=color;
+  pixels.forEach(([x,y])=>{
+    ctx.fillRect(ox+x*s,oy+y*s,s,s);
+  });
+}
+
+// Controller
+(function(){
+  const c=document.getElementById('iconCtrl');
+  const ctx=c.getContext('2d');
+  const s=3;
+  const body=[[2,0],[3,0],[4,0],[5,0],[6,0],[7,0],
+    [1,1],[2,1],[3,1],[4,1],[5,1],[6,1],[7,1],[8,1],
+    [0,2],[1,2],[2,2],[3,2],[4,2],[5,2],[6,2],[7,2],[8,2],[9,2],
+    [0,3],[1,3],[2,3],[3,3],[4,3],[5,3],[6,3],[7,3],[8,3],[9,3],
+    [1,4],[2,4],[3,4],[7,4],[8,4],[1,5],[2,5],[7,5],[8,5]];
+  drawPx(ctx,body,5,4,s,'#a855f7');
+  drawPx(ctx,[[2,2],[3,2],[3,1],[3,3]],5,4,s,'#e8e8e8');
+  drawPx(ctx,[[7,2],[6,3]],5,4,s,'#ff4757');
+})();
+
+// Bug
+(function(){
+  const c=document.getElementById('iconBug');
+  const ctx=c.getContext('2d');
+  const s=3;
+  drawPx(ctx,[[2,0],[3,0],[2,1],[3,1],[1,2],[2,2],[3,2],[4,2],
+    [1,3],[2,3],[3,3],[4,3],[2,4],[3,4]],3,3,s,'#ff4757');
+  drawPx(ctx,[[0,2],[5,2],[0,3],[5,3]],3,3,s,'#ff9f43');
+})();
+
+// Tea
+(function(){
+  const c=document.getElementById('iconTea');
+  const ctx=c.getContext('2d');
+  const s=3;
+  drawPx(ctx,[[1,1],[2,1],[3,1],[4,1],
+    [0,2],[1,2],[2,2],[3,2],[4,2],[5,2],
+    [0,3],[1,3],[2,3],[3,3],[4,3],[5,3],
+    [0,4],[1,4],[2,4],[3,4],[4,4],[5,4],
+    [1,5],[2,5],[3,5],[4,5]],4,3,s,'#00d4ff');
+  drawPx(ctx,[[2,0],[3,0]],4,3,s,'rgba(100,100,140,.6)');
+  ctx.fillStyle='#00d4ff';
+  ctx.fillRect(4+6*s,3+2*s,s,3*s);
+})();
+
+// Play button cache-busting
+document.getElementById('playBtn').addEventListener('click',function(e){
+  e.preventDefault();
+  window.location.href='game/index.html?t='+Date.now();
+});
+
+// Generate skyline
+(function(){
+  const el=document.getElementById('skyline');
+  const heights=[3,5,4,8,6,3,10,7,4,5,12,8,5,3,6,9,4,7,5,3,6,4,8,5];
+  const winColors=['var(--yellow)','var(--accent)','var(--orange)'];
+  let html='';
+  heights.forEach((h,i)=>{
+    const isDome=i===10;
+    if(isDome){
+      html+=`<div class="dome" style="height:${h*5}px">
+        <div class="cross"></div>
+      </div>`;
+    } else {
+      let wins='';
+      for(let wy=5;wy<h*5-5;wy+=10){
+        for(let wx=3;wx<16;wx+=8){
+          if(Math.random()<0.35){
+            const c=winColors[Math.floor(Math.random()*3)];
+            wins+=`<div class="win" style="left:${wx}px;bottom:${wy}px;width:3px;height:3px;background:${c}"></div>`;
+          }
+        }
+      }
+      html+=`<div class="building" style="height:${h*5}px">${wins}</div>`;
+    }
+  });
+  el.innerHTML=html;
+})();
+</script>
+</body>
 </html>
