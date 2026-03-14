@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>С Днём Рождения, Дима!</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
@@ -96,51 +99,46 @@
   }
   .subtitle .yellow{color:var(--yellow)}
 
-  /* QR section */
-  .qr-frame{
+  /* Play button */
+  .play-btn{
     display:inline-block;
-    padding:16px;
-    background:var(--surface);
-    border:3px solid var(--green);
-    outline:2px solid var(--accent);
-    outline-offset:3px;
+    font-family:'Press Start 2P',monospace;
+    font-size:clamp(16px,5vw,24px);
+    color:#fff;
+    background:linear-gradient(135deg,var(--green),var(--accent));
+    padding:18px 40px;
+    border:none;
+    cursor:pointer;
+    text-decoration:none;
     position:relative;
+    transition:transform .15s,box-shadow .15s;
+    animation:btnPulse 2s ease-in-out infinite;
+    line-height:1.6;
   }
-  .qr-frame::before,.qr-frame::after,
-  .qr-frame .corner-bl,.qr-frame .corner-br{
+  .play-btn:active{transform:scale(.95)}
+  .play-btn::before,.play-btn::after,
+  .play-btn .corner-bl,.play-btn .corner-br{
     content:'';position:absolute;
-    width:12px;height:12px;background:var(--accent);
+    width:10px;height:10px;background:var(--yellow);
   }
-  .qr-frame::before{top:-2px;left:-2px}
-  .qr-frame::after{top:-2px;right:-2px}
-  .qr-frame .corner-bl{bottom:-2px;left:-2px}
-  .qr-frame .corner-br{bottom:-2px;right:-2px}
-  .qr-frame img{
-    display:block;
-    width:clamp(200px,60vw,320px);
-    height:auto;image-rendering:pixelated;
+  .play-btn::before{top:-4px;left:-4px}
+  .play-btn::after{top:-4px;right:-4px}
+  .play-btn .corner-bl{bottom:-4px;left:-4px}
+  .play-btn .corner-br{bottom:-4px;right:-4px}
+  @keyframes btnPulse{
+    0%,100%{box-shadow:0 0 0 rgba(0,255,136,0),0 0 0 rgba(0,255,136,0)}
+    50%{box-shadow:0 0 30px rgba(0,255,136,.3),0 4px 20px rgba(0,0,0,.4)}
   }
-
-  /* Steps */
-  .steps{
-    font-size:clamp(10px,3vw,15px);
-    line-height:2.6;
+  .play-hint{
+    font-size:clamp(8px,2vw,11px);
+    color:var(--dim);
+    margin-top:16px;
+    line-height:1.8;
+    animation:blink 1.5s ease-in-out infinite;
   }
-  .steps .s1{color:var(--green)}
-  .steps .s2{color:var(--accent)}
-  .steps .s3{color:var(--yellow)}
-  .steps .arr{color:var(--dim);font-size:clamp(8px,2vw,11px)}
-
-  /* Arrows pointing up */
-  .arrows-up{
-    display:flex;gap:6px;justify-content:center;
-    margin-bottom:8px;
-  }
-  .arrows-up span{
-    width:0;height:0;
-    border-left:5px solid transparent;
-    border-right:5px solid transparent;
-    border-bottom:8px solid var(--green);
+  @keyframes blink{
+    0%,100%{opacity:.4}
+    50%{opacity:1}
   }
 
   /* Terminal block */
@@ -261,14 +259,6 @@
     100%{opacity:0}
   }
 
-  /* Pulse on QR */
-  .qr-frame{
-    animation:qrPulse 3s ease-in-out infinite;
-  }
-  @keyframes qrPulse{
-    0%,100%{box-shadow:0 0 0 rgba(0,255,136,0)}
-    50%{box-shadow:0 0 24px rgba(0,255,136,.2)}
-  }
 </style>
 </head>
 <body>
@@ -314,28 +304,14 @@
     </div>
   </div>
 
-  <!-- QR Code -->
+  <!-- Play button -->
   <div class="section mt3">
-    <div class="qr-frame">
-      <div class="corner-bl"></div>
-      <div class="corner-br"></div>
-      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUgAAAFICAIAAAC9dvBkAAAHNUlEQVR4nO3dQW4cNxRAQTnwWr30OXOS
-nHVukBN0AAYkSD5VrZ1We6AHOvhD8tfz/ecLaPlr9wsA8wkbgoQNQcKGIGFDkLAhSNgQJGwIEjYECRuChA1BwoYgYUOQsCFI2BD0e/Q/+Hz+/rrB8/xz1N/r7X3efu7on/c+/88n+vtsxYYgYUOQsCFI2BAkbAgSNgQJG4KG59iz5myz7JpD7vr77rL6c571/NHvBVR/n63YECRsCBI2BAkbgoQNQcKGIGFD0LQ59pvV+4dvn5eOPn/UrPntrH3ju/aZz3LLe1qxIUjYECRsCBI2BAkbgoQNQcKGoOVz7Nutnjeetq/7tHn1rPPhn8M+59Ws2BAkbAgSNgQJG4KEDUHChiBhQ9CPm2OPzldPm+u+mfU+p+0n3/X+t7NiQ5CwIUjYECRsCBI2BAkbgoQNQcvn2D9trjhrnrzaLfP50zyX/D5bsSFI2BAkbAgSNgQJG4KEDUHChqBpc+xb5par57G75sO334O96/O//ff5jRUbgoQNQcKGIGFDkLAhSNgQJGwI+vV8/9n9DkdbPRe9Zb66eh/yafds386KDUHChiBhQ5CwIUjYECRsCBI2BG27H3vWHHL1PHPX/PbNLed4r36f0z6Hz2FzdSs2BAkbgoQNQcKGIGFDkLAhSNgQNDzHXn3P8+rztGfNOU+7R3rW5//2Prs+N3Pp/8eKDUHChiBhQ5CwIUjYECRsCBI2BA2fK75rn+1P2/drPn/m5/9Z/D2OWc+3YkOQsCFI2BAkbAgSNgQJG4KEDUHTzhVfPce7Zf/2rOeftg951nnss/arO1f8v1mxIUjYECRsCBI2BAkbgoQNQcKGoOH92G9W71M97eeO2nUu9y3Pn2X13Ps57P3fWLEhSNgQJGwIEjYECRuChA1BwoagbeeKz9q3vOs859v3Fd8yjx19/mm/h59N37OwYkOQsCFI2BAkbAgSNgQJG4KEDUHT9mO/OW2f8Gnnn1f3pd8y538Om6u/sR8b8E9xKPL/2BAkbAgSNgQJG4KEDUHDc+w3p839bp9vr3bL/HnXPdWz7DoX3YoNQcKGIGFDkLAhSNgQJGwIEjYETZtj33IO8y37yW85x/vN6Hx79bz3c/k8fJQVG4KEDUHChiBhQ5CwIUjYECRsCFo+x77FrDnq6j+/69zvWe+zev/2ae/zxv3YwDD/FIcgYUOQsCFI2BAkbAgSNgT9uDn2rnuq36w+x3vWnPa088Zn/dznsHvLR5/zxooNQcKGIGFDkLAhSNgQJGwIEjYELZ9jn3be8q792KNz1DenzatHnbYf+7T9+bNYsSFI2BAkbAgSNgQJG4KEDUHChqBpc+xb7p1ebdf+21G7ztOeZdf++WfT9whGWbEhSNgQJGwIEjYECRuChA1BwoagX8/3n93vAExmxYYgYUOQsCFI2BAkbAgSNgQJG4KEDUHChiBhQ5CwIUjYECRsCBI2BAkbvnr+BRfgqdcngFFmAAAAAElFTkSuQmCC" alt="QR Code">
-    </div>
-  </div>
-
-  <!-- Scan steps -->
-  <div class="section mt2">
-    <div class="arrows-up">
-      <span></span><span></span><span></span><span></span><span></span>
-    </div>
-    <div class="steps">
-      <span class="s1">1. ОТСКАНИРУЙ</span><br>
-      <span class="arr">v</span><br>
-      <span class="s2">2. ПРОЙДИ ИГРУ</span><br>
-      <span class="arr">v</span><br>
-      <span class="s3">3. ПОЛУЧИ ПОДАРОК</span>
-    </div>
+    <a href="../game/index.html" class="play-btn" id="playBtn">
+      ИГРАТЬ
+      <span class="corner-bl"></span>
+      <span class="corner-br"></span>
+    </a>
+    <div class="play-hint">нажми чтобы начать</div>
   </div>
 
   <!-- Decorative line -->
@@ -491,6 +467,12 @@ function drawPx(ctx,pixels,ox,oy,s,color){
   ctx.fillStyle='#00d4ff';
   ctx.fillRect(4+6*s,3+2*s,s,3*s);
 })();
+
+// Play button cache-busting
+document.getElementById('playBtn').addEventListener('click',function(e){
+  e.preventDefault();
+  window.location.href='../game/index.html?t='+Date.now();
+});
 
 // Generate skyline
 (function(){
