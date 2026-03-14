@@ -108,15 +108,16 @@
   @keyframes floatUp{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-60px) scale(.8)}}
 
   .flavor{
+    position:absolute;top:0;left:0;right:0;
     font-size:clamp(10px,2.8vw,13px);color:var(--yellow);text-align:center;
-    padding:8px 5%;background:var(--panel);
-    border-bottom:1px solid rgba(255,211,42,.3);flex-shrink:0;z-index:15;
+    padding:10px 5%;background:var(--panel);
+    border-bottom:2px solid rgba(255,211,42,.3);z-index:18;pointer-events:none;
     animation:flavorShow 4s ease-in-out forwards;line-height:1.8;
   }
-  @keyframes flavorShow{0%{opacity:0;max-height:0;padding:0 5%}10%{opacity:1;max-height:50px;padding:8px 5%}80%{opacity:1;max-height:50px;padding:8px 5%}100%{opacity:0;max-height:0;padding:0 5%}}
+  @keyframes flavorShow{0%{opacity:0;transform:translateY(-100%)}8%{opacity:1;transform:translateY(0)}80%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-100%)}}
 
   .boost-ind{
-    position:absolute;top:8px;left:8px;font-size:clamp(11px,3vw,14px);
+    position:absolute;top:44px;left:8px;font-size:clamp(11px,3vw,14px);
     color:var(--yellow);background:rgba(0,0,0,.7);padding:3px 7px;
     z-index:15;pointer-events:none;display:none;
   }
@@ -306,7 +307,7 @@
   .caffeine{animation:cafJit .1s infinite;box-shadow:inset 0 0 60px rgba(0,255,136,.15)}
   @keyframes cafJit{0%{transform:translate(0)}25%{transform:translate(1px,-1px)}50%{transform:translate(-1px,1px)}75%{transform:translate(1px,1px)}100%{transform:translate(-1px,-1px)}}
   .caffeine-ind{
-    position:absolute;top:32px;left:8px;font-size:clamp(11px,3vw,14px);
+    position:absolute;top:68px;left:8px;font-size:clamp(11px,3vw,14px);
     color:var(--green);background:rgba(0,0,0,.7);padding:3px 7px;
     z-index:15;pointer-events:none;display:none;
   }
@@ -452,8 +453,8 @@
       <div class="prog-inner" id="pBar"></div>
       <div class="milestone-mark" style="left:25%"></div>
       <div class="milestone-mark" style="left:50%"></div>
-      <div class="milestone-mark" style="left:72%"></div>
-      <div class="milestone-mark" style="left:94%"></div>
+      <div class="milestone-mark" style="left:78%"></div>
+      <div class="milestone-mark" style="left:96%"></div>
     </div>
   </div>
   <div class="game-area" id="gameArea">
@@ -484,7 +485,7 @@
 // ══════════════════════════════════════════════
 //  VERSION & LOGGING
 // ══════════════════════════════════════════════
-const GAME_VERSION='2.5.0';
+const GAME_VERSION='2.6.0';
 const gameLog=[];
 function log(msg){
   const ts=new Date().toISOString().slice(11,19);
@@ -1801,20 +1802,20 @@ function handleSwimClick(){
 function checkEvents(){
   const p=Math.floor(S.progress);
 
-  // Crash dialog at ~8%
-  if(p>=8&&!S.crashShown){
+  // Crash dialog at ~5%
+  if(p>=5&&!S.crashShown){
     S.crashShown=true;
     setTimeout(showFakeCrash,2000);
   }
 
-  // Dogs at ~18%
-  if(p>=18&&!S.dogShown){
+  // Dogs at ~15%
+  if(p>=15&&!S.dogShown){
     S.dogShown=true;
     setTimeout(spawnDog,3000);
   }
 
-  // Typing challenge (code review) at ~30%
-  if(p>=30&&!S.typingShown){
+  // Typing challenge (code review) at ~27%
+  if(p>=27&&!S.typingShown){
     S.typingShown=true;
     setTimeout(showTypingChallenge,2000);
   }
@@ -1825,32 +1826,32 @@ function checkEvents(){
     setTimeout(showKhachapuri,2000);
   }
 
-  // Stack Overflow down at ~52%
-  if(p>=52&&!S.soDownShown){
+  // Stack Overflow down at ~56%
+  if(p>=56&&!S.soDownShown){
     S.soDownShown=true;
     setTimeout(showSODown,3000);
   }
 
-  // Marshrutka at ~62%
-  if(p>=62&&!S.marshrutkaShown){
+  // Marshrutka at ~67%
+  if(p>=67&&!S.marshrutkaShown){
     S.marshrutkaShown=true;
     setTimeout(spawnMarshrutka,2000);
   }
 
-  // Swimming (memory leak) at ~72%
-  if(p>=72&&!S.milestones[65]){
+  // Swimming (memory leak) at ~78%
+  if(p>=78&&!S.milestones[65]){
     S.milestones[65]=true;
     startSwimPhase();
   }
 
-  // Chacha at ~83%
-  if(p>=83&&!S.chachaShown){
+  // Chacha at ~88%
+  if(p>=88&&!S.chachaShown){
     S.chachaShown=true;
     setTimeout(showChachaPopup,2000);
   }
 
-  // Fog gate before boss at ~94%
-  if(p>=94&&!S.fogGateShown){
+  // Fog gate before boss at ~96%
+  if(p>=96&&!S.fogGateShown){
     S.fogGateShown=true;
     setTimeout(showFogGate,1500);
   }
@@ -2334,9 +2335,7 @@ function showFlavor(text){
   document.querySelectorAll('.flavor').forEach(e=>e.remove());
   const el=document.createElement('div');
   el.className='flavor';el.textContent=text;
-  const game=document.getElementById('game');
-  const gameArea=document.getElementById('gameArea');
-  game.insertBefore(el,gameArea);
+  document.getElementById('gameArea').appendChild(el);
   setTimeout(()=>el.remove(),4500);
 }
 
@@ -2479,7 +2478,7 @@ function handleGameClick(e){
 
   const cm=1+S.combo*.05;
   const cafBonus=S.caffeineActive?1.5:1;
-  const gain=.3*S.mult*cm*cafBonus;
+  const gain=.18*S.mult*cm*cafBonus;
   S.progress=Math.min(100,S.progress+gain);
   S.lines++;
 
